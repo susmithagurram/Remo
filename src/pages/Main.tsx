@@ -1,23 +1,17 @@
 import { usePrivy } from '@privy-io/react-auth';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Main.scss';
+import ProfileMenu from '../components/ProfileMenu';
 
 const Main = () => {
-  const { logout } = usePrivy();
+  const { ready } = usePrivy();
   const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    await logout();
-    navigate('/');
-  };
 
   return (
     <div className="main-page">
       <nav className="navbar">
         <div className="logo">REMO</div>
-        <button onClick={handleLogout} className="create-button">
-          Logout
-        </button>
+        <ProfileMenu />
       </nav>
     </div>
   );
