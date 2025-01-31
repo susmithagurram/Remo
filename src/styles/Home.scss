@@ -1,0 +1,134 @@
+.home {
+  min-height: 100vh;
+  position: relative;
+  color: #fff;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/Homebg7.jpg') no-repeat center center;
+    background-size: cover;
+    opacity: 0.99;  // Adjust this value between 0 and 1 for desired transparency
+    z-index: -1;
+  }
+
+  // Move navbar and hero-content above the overlay
+  .navbar, .hero-content {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    position: relative;
+    z-index: 10;
+    
+    .logo {
+      font-size: 2rem;
+      font-weight: bold;
+      font-family: 'Cinzel Decorative', cursive;
+    }
+
+    .create-button {
+      position: relative;
+      z-index: 11;
+    }
+  }
+  
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 80px);
+    gap: 0.5rem;
+    margin-top: -13vh;
+    
+    .text-line {
+      font-family: 'Inter', sans-serif;
+      font-size: 2rem;
+      display: none;
+      
+      &.complete {
+        display: block;
+      }
+      
+      &.project-remo {
+        font-family: 'Cinzel Decorative', cursive;
+        font-size: 5rem;
+        font-weight: bold;
+        letter-spacing: 2px;
+        margin-bottom: -0.5rem;
+        
+        .project {
+          display: inline-block;
+        }
+        
+        .remo {
+          display: inline-block;
+          animation: pulse 2s infinite;
+        }
+      }
+
+      &.tagline {
+        font-size: 1.2rem;
+        font-weight: 300;
+        color: #fff;
+      }
+    }
+
+    .create-button {
+      margin-top: 2rem;
+    }
+  }
+
+  .create-button {
+    padding: 0.8rem 2rem;
+    border: 2px solid #fff;
+    border-radius: 25px;
+    background: transparent;
+    color: #fff;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    outline: none;
+    font-family: inherit;
+    
+    &:hover {
+      background: #fff;
+      color: #000;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+@keyframes pixelReveal {
+  0% {
+    opacity: 0;
+    filter: blur(15px) brightness(200%);
+    letter-spacing: 20px;
+  }
+  50% {
+    opacity: 0.5;
+    filter: blur(10px) brightness(150%);
+    letter-spacing: 10px;
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0) brightness(100%);
+    letter-spacing: normal;
+  }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+} 
