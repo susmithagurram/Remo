@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { useNavigate } from 'react-router-dom';
-import '../styles/ProfileMenu.scss';
+import styles from '../styles/ProfileMenu.module.css';
 
 const ProfileMenu = () => {
   const { user, logout, ready } = usePrivy();
@@ -25,28 +25,28 @@ const ProfileMenu = () => {
   };
 
   return (
-    <div className="profile-menu">
+    <div className={styles.profileMenu}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         onBlur={() => setTimeout(() => setIsOpen(false), 200)}
-        className="menu-button"
+        className={styles.menuButton}
       >
         <span>{displayText}</span>
       </button>
 
       {isOpen && (
-        <div className="dropdown-menu">
-          <div className="menu-items" role="menu">
+        <div className={styles.dropdownMenu}>
+          <div className={styles.menuItems} role="menu">
             <button
               onClick={() => navigate('/profile')}
-              className="menu-item"
+              className={styles.menuItem}
               role="menuitem"
             >
               Profile
             </button>
             <button
               onClick={handleLogout}
-              className="menu-item"
+              className={styles.menuItem}
               role="menuitem"
             >
               Logout
