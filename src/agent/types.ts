@@ -1,8 +1,15 @@
 export interface Message {
   id: string;
-  role: 'user' | 'assistant';
   content: string;
+  role: 'user' | 'assistant';
   timestamp: number;
+}
+
+export interface ChatHistory {
+  id: string;
+  title: string;
+  timestamp: number;
+  preview: string;
 }
 
 export interface ChatState {

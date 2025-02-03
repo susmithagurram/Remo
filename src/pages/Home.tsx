@@ -21,7 +21,7 @@ const Home = () => {
 
   const handleAIClick = () => {
     console.log('AI icon clicked');
-    // AI functionality will be added later
+    navigate('/chat');
   };
 
   // Redirect to main page when authenticated
