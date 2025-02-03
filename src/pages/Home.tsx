@@ -24,10 +24,10 @@ const Home = () => {
     navigate('/chat');
   };
 
-  // Redirect to main page when authenticated
+  // Redirect to chat page when authenticated
   useEffect(() => {
     if (authenticated) {
-      navigate('/main');
+      navigate('/chat');
     }
   }, [authenticated, navigate]);
 

@@ -8,7 +8,7 @@
 /* Left Side */
 .sidebar {
   width: 300px;
-  min-width: 300px; /* Prevent sidebar from shrinking */
+  min-width: 300px;
   height: 100vh;
   background: rgba(23, 23, 23, 0.95);
   border-right: 1px solid rgba(255, 255, 255, 0.1);
@@ -19,6 +19,15 @@
   position: fixed;
   left: 0;
   top: 0;
+  overflow-y: auto;
+}
+
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  font-family: "Cinzel Decorative", cursive;
+  color: #fff;
+  margin-bottom: 1rem;
 }
 
 .sidebarSection {
@@ -73,23 +82,92 @@
   transform: translateY(0);
 }
 
-/* Main Area (Right Side) */
+/* Profile Menu Styles */
+.profileMenu {
+  position: relative;
+  width: 100%;
+}
+
+.profileButton {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: rgba(103, 111, 255, 0.15);
+  border: 1px solid rgba(103, 111, 255, 0.3);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.profileButton:hover {
+  background: rgba(103, 111, 255, 0.25);
+  transform: translateY(-1px);
+  border-color: rgba(103, 111, 255, 0.5);
+}
+
+.profileDropdown {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: rgba(32, 33, 35, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.profileOption {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.profileOption:hover {
+  background: rgba(103, 111, 255, 0.15);
+  transform: translateX(5px);
+}
+
+/* Main Chat Area */
 .mainChat {
   flex: 1;
   display: flex;
   flex-direction: column;
   background: #000;
   position: relative;
-  margin-left: 300px; /* Match sidebar width */
+  margin-left: 300px;
 }
 
+.welcomeMessage {
+  text-align: center;
+  padding: 2rem;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #fff;
+  font-family: "Cinzel Decorative", cursive;
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+  animation-delay: 0.2s;
+}
+
+/* Rest of the existing chat styles */
 .messagesContainer {
   flex: 1;
   padding: 2rem;
+  padding-bottom: calc(2rem + 80px);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  scroll-behavior: smooth;
 }
 
 .message {
@@ -111,6 +189,15 @@
   border-bottom-left-radius: 4px;
 }
 
+.message.error {
+  background: rgba(255, 59, 48, 0.2);
+  margin: 0 auto;
+  text-align: center;
+  color: #ff3b30;
+  font-size: 0.9rem;
+  max-width: 60%;
+}
+
 .messageContent {
   font-size: 0.95rem;
   line-height: 1.5;
@@ -125,31 +212,37 @@
 }
 
 .inputForm {
-  padding: 1.5rem;
-  background: rgba(32, 33, 35, 0.95);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  left: calc(300px + 2rem);
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
-  gap: 1rem;
-  align-items: flex-end;
+  align-items: center;
+  background: rgba(32, 33, 35, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 0.25rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .input {
   flex: 1;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 1rem;
+  background: transparent;
+  border: none;
+  padding: 0.75rem 1rem;
   color: #fff;
-  font-size: 0.95rem;
+  font-size: 1rem;
   resize: none;
   font-family: inherit;
   max-height: 200px;
   min-height: 24px;
+  transition: all 0.2s ease;
 }
 
 .input:focus {
   outline: none;
-  border-color: rgba(103, 111, 255, 0.5);
 }
 
 .input::placeholder {
@@ -157,26 +250,29 @@
 }
 
 .sendButton {
-  background: transparent;
+  background: #676FFF;
   border: none;
-  color: #676FFF;
-  padding: 0.5rem;
+  color: #fff;
+  width: 2.5rem;
+  height: 2.5rem;
   cursor: pointer;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  margin-right: 0.25rem;
 }
 
 .sendButton:hover {
-  background: rgba(103, 111, 255, 0.1);
-  transform: translateY(-2px);
+  background: #7c83ff;
+  transform: scale(1.05);
 }
 
 .sendButton:disabled {
-  color: rgba(255, 255, 255, 0.3);
+  background: rgba(103, 111, 255, 0.3);
   cursor: not-allowed;
+  transform: none;
 }
 
 .loadingDots {

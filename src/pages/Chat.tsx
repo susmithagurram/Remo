@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { usePrivy } from '@privy-io/react-auth';
+import { useNavigate } from 'react-router-dom';
 import styles from '../styles/Chat.module.css';
+import { bedrockService } from '../agent/bedrockService';
+import { remoPersonality } from '../agent/config';
 
 interface Message {
   id: string;
@@ -9,16 +13,22 @@ interface Message {
 }
 
 const Chat: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      content: 'Hello! I am Remo, your personal AI assistant. How can I help you today?',
-      role: 'assistant',
-      timestamp: Date.now()
-    }
-  ]);
+  const { user, logout } = usePrivy();
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleLocalDeploy = () => {
     console.log('Deploying locally...');
@@ -44,24 +54,43 @@ const Chat: React.FC = () => {
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
+    setError(null);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      const response = await bedrockService.generateResponse([...messages, userMessage]);
+      
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: "This is a placeholder response. The actual AI integration will be implemented later.",
+        content: response,
         role: 'assistant',
         timestamp: Date.now()
       };
+
       setMessages(prev => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('Error in chat:', error);
+      setError(error instanceof Error ? error.message : 'Failed to get response from Remo');
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
+  };
+
+  // Get user's name (email or wallet address)
+  const getUserName = () => {
+    if (!user) return 'Guest';
+    if (user.email) return user.email.toString().split('@')[0];
+    if (user.wallet?.address) {
+      return `${user.wallet.address.slice(0, 6)}...${user.wallet.address.slice(-4)}`;
+    }
+    return 'Guest';
   };
 
   return (
     <div className={styles.chatPage}>
       {/* Left Sidebar */}
       <div className={styles.sidebar}>
+        <div className={styles.logo}>REMO</div>
+        
         {/* Local Section */}
         <div className={styles.sidebarSection}>
           <h2 className={styles.sectionTitle}>Create Using Local</h2>
@@ -111,10 +140,48 @@ const Chat: React.FC = () => {
             Deploy
           </button>
         </div>
+
+        {/* Profile Section */}
+        <div className={styles.sidebarSection}>
+          <div className={styles.profileMenu}>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className={styles.profileButton}
+            >
+              {user?.email?.toString() || user?.wallet?.address?.slice(0, 6) + '...' + user?.wallet?.address?.slice(-4) || 'Guest'}
+            </button>
+            {isOpen && (
+              <div className={styles.profileDropdown}>
+                <button
+                  onClick={() => {
+                    navigate('/profile');
+                    setIsOpen(false);
+                  }}
+                  className={styles.profileOption}
+                >
+                  Profile
+                </button>
+                <button
+                  onClick={async () => {
+                    await logout();
+                    navigate('/');
+                    setIsOpen(false);
+                  }}
+                  className={styles.profileOption}
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Main Chat Area */}
       <div className={styles.mainChat}>
+        <div className={styles.welcomeMessage}>
+          Hello, {getUserName()}
+        </div>
         <div className={styles.messagesContainer}>
           {messages.map(message => (
             <div
@@ -138,6 +205,12 @@ const Chat: React.FC = () => {
               </div>
             </div>
           )}
+          {error && (
+            <div className={`${styles.message} ${styles.error}`}>
+              {error}
+            </div>
+          )}
+          <div ref={messagesEndRef} />
         </div>
 
         <form onSubmit={handleSubmit} className={styles.inputForm}>
