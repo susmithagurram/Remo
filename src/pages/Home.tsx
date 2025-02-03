@@ -21,7 +21,11 @@ const Home = () => {
 
   const handleAIClick = () => {
     console.log('AI icon clicked');
-    navigate('/chat');
+    if (!authenticated) {
+      openLogin();
+    } else {
+      navigate('/chat');
+    }
   };
 
   // Redirect to chat page when authenticated

@@ -78,10 +78,16 @@ const Chat: React.FC = () => {
   // Get user's name (email or wallet address)
   const getUserName = () => {
     if (!user) return 'Guest';
-    if (user.email) return user.email.toString().split('@')[0];
-    if (user.wallet?.address) {
-      return `${user.wallet.address.slice(0, 6)}...${user.wallet.address.slice(-4)}`;
+    
+    // Check for connected wallets
+    const walletAccount = user.linkedAccounts?.find(account => account.type === 'wallet');
+    if (walletAccount) {
+      return `${walletAccount.address.slice(0, 6)}...${walletAccount.address.slice(-4)}`;
     }
+    
+    // Fallback to email if available
+    if (user.email) return user.email.toString().split('@')[0];
+    
     return 'Guest';
   };
 
@@ -148,7 +154,7 @@ const Chat: React.FC = () => {
               onClick={() => setIsOpen(!isOpen)}
               className={styles.profileButton}
             >
-              {user?.email?.toString() || user?.wallet?.address?.slice(0, 6) + '...' + user?.wallet?.address?.slice(-4) || 'Guest'}
+              {getUserName()}
             </button>
             {isOpen && (
               <div className={styles.profileDropdown}>

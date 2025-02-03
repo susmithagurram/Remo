@@ -3,6 +3,7 @@ import Home from './pages/Home';
 import Chat from './pages/Chat';
 import Profile from './pages/Profile';
 import { LoginProvider } from './context/LoginContext';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -10,8 +11,22 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route 
+            path="/chat" 
+            element={
+              <ProtectedRoute>
+                <Chat />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } 
+          />
         </Routes>
       </Router>
     </LoginProvider>

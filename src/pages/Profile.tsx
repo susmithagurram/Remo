@@ -1,10 +1,106 @@
 import { usePrivy } from '@privy-io/react-auth';
+import { useState, useEffect } from 'react';
 import styles from '../styles/Profile.module.css';
+import { dynamoDBService, UserData } from '../utils/dynamoDBService';
 
 const Profile = () => {
   const { user, ready, linkWallet, linkEmail, linkTwitter, createWallet } = usePrivy();
+  const [isEditingUsername, setIsEditingUsername] = useState(false);
+  const [username, setUsername] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  
+  // Helper function to get user's unique ID
+  const getUserId = () => {
+    if (!user) return null;
+    // Use wallet address as primary identifier if available
+    const walletAccount = user.linkedAccounts?.find(account => account.type === 'wallet');
+    if (walletAccount?.address) return walletAccount.address;
+    // Fallback to email if no wallet
+    if (user.email) return user.email.toString();
+    return null;
+  };
 
-  if (!ready || !user) return null;
+  // Helper function to get default username
+  const getDefaultUsername = () => {
+    if (!user) return 'Guest';
+    const walletAccount = user.linkedAccounts?.find(account => account.type === 'wallet');
+    if (walletAccount?.address) {
+      return `${walletAccount.address.slice(0, 6)}...${walletAccount.address.slice(-4)}`;
+    }
+    if (user.email?.toString()) {
+      return user.email.toString().split('@')[0];
+    }
+    if (user.twitter?.username) {
+      return `@${user.twitter.username}`;
+    }
+    return 'Guest';
+  };
+
+  // Load user data from DynamoDB
+  useEffect(() => {
+    const loadUserData = async () => {
+      if (ready && user) {
+        const userId = getUserId();
+        if (userId) {
+          setIsLoading(true);
+          setError(null);
+          try {
+            const userData = await dynamoDBService.getUserData(userId);
+            if (userData) {
+              setUsername(userData.username);
+            } else {
+              const defaultUsername = getDefaultUsername();
+              setUsername(defaultUsername);
+              await dynamoDBService.updateUserData({
+                userId,
+                username: defaultUsername,
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+              });
+            }
+          } catch (error) {
+            console.error('Error loading user data:', error);
+            setError('Failed to load user data. Please try again later.');
+            setUsername(getDefaultUsername());
+          } finally {
+            setIsLoading(false);
+          }
+        }
+      }
+    };
+
+    loadUserData();
+  }, [ready, user]);
+
+  const handleUsernameSubmit = async () => {
+    if (!username.trim() || !user) return;
+
+    const userId = getUserId();
+    if (!userId) return;
+
+    const newUsername = username.trim();
+    setIsSaving(true);
+    setError(null);
+    
+    try {
+      await dynamoDBService.updateUserData({
+        userId,
+        username: newUsername,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+      setIsEditingUsername(false);
+    } catch (error) {
+      console.error('Error updating username:', error);
+      setError('Failed to save username. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (!ready || !user || isLoading) return null;
 
   const connectedAccounts = user.linkedAccounts;
   const hasEmbeddedWallet = connectedAccounts.some(account => account.type === 'smart_wallet');
@@ -15,7 +111,7 @@ const Profile = () => {
         <div className={styles.profileHeader}>
           <div className={styles.avatarSection}>
             <div className={styles.avatar}>
-              {user.email?.toString().charAt(0).toUpperCase() || '👤'}
+              {username.charAt(0).toUpperCase()}
             </div>
             <h1>My Profile</h1>
           </div>
@@ -23,13 +119,52 @@ const Profile = () => {
         
         <div className={styles.profileCard}>
           <h2>🎯 Basic Information</h2>
+          {error && (
+            <div className={styles.errorMessage}>
+              {error}
+            </div>
+          )}
           <div className={styles.infoGrid}>
-            {user.email && (
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>📧 Email</span>
-                <span className={styles.infoValue}>{user.email.toString()}</span>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>👤 Username</span>
+              <div className={styles.infoValue}>
+                {isEditingUsername ? (
+                  <div className={styles.usernameEdit}>
+                    <input
+                      type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className={styles.usernameInput}
+                      autoFocus
+                      disabled={isSaving}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !isSaving) {
+                          handleUsernameSubmit();
+                        }
+                      }}
+                    />
+                    <button
+                      onClick={handleUsernameSubmit}
+                      className={styles.saveButton}
+                      disabled={isSaving}
+                    >
+                      {isSaving ? 'Saving...' : 'Save'}
+                    </button>
+                  </div>
+                ) : (
+                  <div className={styles.usernameDisplay}>
+                    <span>{username}</span>
+                    <button
+                      onClick={() => setIsEditingUsername(true)}
+                      className={styles.editButton}
+                      disabled={isSaving}
+                    >
+                      ✏️
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
             {user.twitter?.username && (
               <div className={styles.infoItem}>
                 <span className={styles.infoLabel}>🐦 Twitter</span>
@@ -54,7 +189,7 @@ const Profile = () => {
                     <span className={styles.accountName}>
                       {account.type === 'wallet' && `${account.address.slice(0, 6)}...${account.address.slice(-4)}`}
                       {account.type === 'email' && account.address}
-                      {account.type === 'twitter_oauth' && 'Twitter Account'}
+                      {account.type === 'twitter_oauth' && `@${user.twitter?.username}`}
                     </span>
                     <span className={styles.accountType}>{account.type}</span>
                   </div>

@@ -179,4 +179,74 @@
       }
     }
   }
+}
+
+.usernameEdit {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.usernameInput {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 0.5rem;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+}
+
+.usernameInput:focus {
+  border-color: rgba(103, 111, 255, 0.5);
+}
+
+.saveButton {
+  background: rgba(103, 111, 255, 0.2);
+  border: 1px solid rgba(103, 111, 255, 0.5);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.saveButton:hover {
+  background: rgba(103, 111, 255, 0.3);
+}
+
+.usernameDisplay {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.editButton {
+  background: none;
+  border: none;
+  padding: 0.2rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.editButton:hover {
+  opacity: 1;
+}
+
+.errorMessage {
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.2);
+  color: #ff6b6b;
+  padding: 0.8rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.saveButton:disabled,
+.editButton:disabled,
+.usernameInput:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 } 
