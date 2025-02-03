@@ -15,4 +15,11 @@ export default defineConfig({
       scopeBehaviour: 'local',
     }
   },
+  server: {
+    port: 8585
+  },
+  define: {
+    // This is required for Vite to properly inject env variables
+    'process.env': {}
+  }
 }); 
