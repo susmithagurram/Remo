@@ -9,9 +9,19 @@ const Home = () => {
   const { openLogin } = useLogin();
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    console.log('Button clicked');
+  const handleLoginClick = () => {
+    console.log('Create Agent clicked');
     openLogin();
+  };
+
+  const handleSearchClick = () => {
+    console.log('Search icon clicked');
+    // Search functionality will be added later
+  };
+
+  const handleAIClick = () => {
+    console.log('AI icon clicked');
+    // AI functionality will be added later
   };
 
   // Redirect to main page when authenticated
@@ -25,14 +35,49 @@ const Home = () => {
     <div className={styles.home}>
       <nav className={styles.navbar}>
         <div className={styles.logo}>REMO</div>
-        <button 
-          type="button" 
-          onClick={handleClick} 
-          className={styles.createButton}
-          style={{ pointerEvents: 'auto' }}
-        >
-          Login
-        </button>
+        <div className={styles.iconGroup}>
+          <button 
+            type="button" 
+            onClick={handleSearchClick} 
+            className={styles.navIcon}
+            aria-label="Search"
+          >
+            <svg 
+              width="28" 
+              height="28" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </button>
+          <button 
+            type="button" 
+            onClick={handleAIClick} 
+            className={styles.navIcon}
+            aria-label="AI Chat"
+          >
+            <svg 
+              width="28" 
+              height="28" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            >
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+              <path d="M12 8l-4 4 4 4 4-4-4-4z"/>
+              <path d="M12 16l-4-4 4-4 4 4-4 4z"/>
+            </svg>
+          </button>
+        </div>
       </nav>
       
       <div className={styles.heroContent}>
@@ -43,7 +88,11 @@ const Home = () => {
         <div className={styles.textLine}>
           Personal AI Assistant that can be hired by every human in the planet
         </div>
-        <button type="button" onClick={handleClick} className={styles.createButton}>
+        <button 
+          type="button" 
+          onClick={handleLoginClick} 
+          className={styles.createButton}
+        >
           Create Your Agent Now
         </button>
       </div>
@@ -53,7 +102,11 @@ const Home = () => {
           <div className={styles.descriptionText}>
             Project Remo is your Personal AI assistant which helps you to do all the activities as same as a hired assistant.
           </div>
-          <button type="button" onClick={handleClick} className={styles.createButton}>
+          <button 
+            type="button" 
+            onClick={handleLoginClick} 
+            className={styles.createButton}
+          >
             Hello, I am Remo your....
           </button>
         </div>
