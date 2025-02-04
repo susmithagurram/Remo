@@ -1,6 +1,6 @@
 import { usePrivy } from '@privy-io/react-auth';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLogin } from '../context/LoginContext';
 import styles from '../styles/Home.module.css';
 
@@ -8,6 +8,7 @@ const Home = () => {
   const { authenticated } = usePrivy();
   const { openLogin } = useLogin();
   const navigate = useNavigate();
+  const [showAllServices, setShowAllServices] = useState(false);
 
   const handleLoginClick = () => {
     console.log('Create Agent clicked');
@@ -245,20 +246,7 @@ const Home = () => {
           <div className={styles.servicesGrid}>
             <div className={styles.serviceBlock}>
               <div className={styles.serviceIcon}>
-                <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                  <path d="M45 15H15C12.25 15 10 17.25 10 20V40C10 42.75 12.25 45 15 45H45C47.75 45 50 42.75 50 40V20C50 17.25 47.75 15 45 15Z" fill="url(#paint0_linear)"/>
-                  <path d="M25 25H35M25 35H35" stroke="url(#paint1_linear)" strokeWidth="2" strokeLinecap="round"/>
-                  <defs>
-                    <linearGradient id="paint0_linear" x1="10" y1="15" x2="50" y2="45" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#6C63FF"/>
-                      <stop offset="1" stopColor="#3B82F6"/>
-                    </linearGradient>
-                    <linearGradient id="paint1_linear" x1="25" y1="25" x2="35" y2="35" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#FFFFFF"/>
-                      <stop offset="1" stopColor="#E5E7EB"/>
-                    </linearGradient>
-                  </defs>
-                </svg>
+                <img src="/Personaluse.jpg" alt="Personal Use" className={styles.serviceImage} />
               </div>
               <h3 className={styles.serviceTitle}>Personal Use</h3>
               <p className={styles.serviceDescription}>Smart email management that filters important messages and provides timely reminders, ensuring you never miss crucial communications.</p>
@@ -266,20 +254,7 @@ const Home = () => {
 
             <div className={styles.serviceBlock}>
               <div className={styles.serviceIcon}>
-                <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                  <path d="M45 15L30 5L15 15V35L30 45L45 35V15Z" fill="url(#paint0_linear)"/>
-                  <path d="M30 25L35 30L30 35L25 30L30 25Z" fill="url(#paint1_linear)"/>
-                  <defs>
-                    <linearGradient id="paint0_linear" x1="15" y1="5" x2="45" y2="45" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#10B981"/>
-                      <stop offset="1" stopColor="#047857"/>
-                    </linearGradient>
-                    <linearGradient id="paint1_linear" x1="25" y1="25" x2="35" y2="35" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#FFFFFF"/>
-                      <stop offset="1" stopColor="#E5E7EB"/>
-                    </linearGradient>
-                  </defs>
-                </svg>
+                <img src="/BuildingPortflio.jpg" alt="Building Portfolios" className={styles.serviceImage} />
               </div>
               <h3 className={styles.serviceTitle}>Building Portfolios</h3>
               <p className={styles.serviceDescription}>Personalized investment strategies based on market trends and your preferences, creating optimized portfolios for stocks and cryptocurrencies.</p>
@@ -287,67 +262,78 @@ const Home = () => {
 
             <div className={styles.serviceBlock}>
               <div className={styles.serviceIcon}>
-                <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                  <path d="M45 15H15C12.25 15 10 17.25 10 20V40C10 42.75 12.25 45 15 45H45C47.75 45 50 42.75 50 40V20C50 17.25 47.75 15 45 15Z" fill="url(#paint0_linear)"/>
-                  <path d="M20 30H40M30 20V40" stroke="url(#paint1_linear)" strokeWidth="2" strokeLinecap="round"/>
-                  <defs>
-                    <linearGradient id="paint0_linear" x1="10" y1="15" x2="50" y2="45" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#F59E0B"/>
-                      <stop offset="1" stopColor="#D97706"/>
-                    </linearGradient>
-                    <linearGradient id="paint1_linear" x1="20" y1="20" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#FFFFFF"/>
-                      <stop offset="1" stopColor="#E5E7EB"/>
-                    </linearGradient>
-                  </defs>
-                </svg>
+                <img src="/News.jpg" alt="News" className={styles.serviceImage} />
               </div>
               <h3 className={styles.serviceTitle}>News</h3>
               <p className={styles.serviceDescription}>Comprehensive news coverage tailored to your location and interests, delivering both global headlines and local updates that matter to you.</p>
             </div>
 
-            <div className={styles.serviceBlock}>
-              <div className={styles.serviceIcon}>
-                <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                  <path d="M30 5L40 20H20L30 5Z" fill="url(#paint0_linear)"/>
-                  <path d="M15 25H45L40 45H20L15 25Z" fill="url(#paint1_linear)"/>
-                  <defs>
-                    <linearGradient id="paint0_linear" x1="20" y1="5" x2="40" y2="20" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#60A5FA"/>
-                      <stop offset="1" stopColor="#3B82F6"/>
-                    </linearGradient>
-                    <linearGradient id="paint1_linear" x1="15" y1="25" x2="45" y2="45" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#93C5FD"/>
-                      <stop offset="1" stopColor="#60A5FA"/>
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </div>
-              <h3 className={styles.serviceTitle}>Weather</h3>
-              <p className={styles.serviceDescription}>Proactive weather monitoring that syncs with your schedule, providing smart recommendations for your planned activities based on real-time conditions.</p>
-            </div>
+            {showAllServices && (
+              <>
+                <div className={styles.serviceBlock}>
+                  <div className={styles.serviceIcon}>
+                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                      <path d="M30 5L40 20H20L30 5Z" fill="url(#paint0_linear)"/>
+                      <path d="M15 25H45L40 45H20L15 25Z" fill="url(#paint1_linear)"/>
+                      <defs>
+                        <linearGradient id="paint0_linear" x1="20" y1="5" x2="40" y2="20" gradientUnits="userSpaceOnUse">
+                          <stop stopColor="#60A5FA"/>
+                          <stop offset="1" stopColor="#3B82F6"/>
+                        </linearGradient>
+                        <linearGradient id="paint1_linear" x1="15" y1="25" x2="45" y2="45" gradientUnits="userSpaceOnUse">
+                          <stop stopColor="#93C5FD"/>
+                          <stop offset="1" stopColor="#60A5FA"/>
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  </div>
+                  <h3 className={styles.serviceTitle}>Weather</h3>
+                  <p className={styles.serviceDescription}>Proactive weather monitoring that syncs with your schedule, providing smart recommendations for your planned activities based on real-time conditions.</p>
+                </div>
 
-            <div className={styles.serviceBlock}>
-              <div className={styles.serviceIcon}>
-                <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                  <path d="M30 5C16.2 5 5 16.2 5 30C5 43.8 16.2 55 30 55C43.8 55 55 43.8 55 30C55 16.2 43.8 5 30 5Z" fill="url(#paint0_linear)"/>
-                  <path d="M30 20V40M20 30H40" stroke="url(#paint1_linear)" strokeWidth="3" strokeLinecap="round"/>
-                  <defs>
-                    <linearGradient id="paint0_linear" x1="5" y1="5" x2="55" y2="55" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#F87171"/>
-                      <stop offset="1" stopColor="#DC2626"/>
-                    </linearGradient>
-                    <linearGradient id="paint1_linear" x1="20" y1="20" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#FFFFFF"/>
-                      <stop offset="1" stopColor="#E5E7EB"/>
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </div>
-              <h3 className={styles.serviceTitle}>Health</h3>
-              <p className={styles.serviceDescription}>Daily health monitoring and personalized wellness recommendations based on your activities and conditions, helping you maintain optimal health.</p>
-            </div>
+                <div className={styles.serviceBlock}>
+                  <div className={styles.serviceIcon}>
+                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                      <path d="M30 5C16.2 5 5 16.2 5 30C5 43.8 16.2 55 30 55C43.8 55 55 43.8 55 30C55 16.2 43.8 5 30 5Z" fill="url(#paint0_linear)"/>
+                      <path d="M30 20V40M20 30H40" stroke="url(#paint1_linear)" strokeWidth="3" strokeLinecap="round"/>
+                      <defs>
+                        <linearGradient id="paint0_linear" x1="5" y1="5" x2="55" y2="55" gradientUnits="userSpaceOnUse">
+                          <stop stopColor="#F87171"/>
+                          <stop offset="1" stopColor="#DC2626"/>
+                        </linearGradient>
+                        <linearGradient id="paint1_linear" x1="20" y1="20" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                          <stop stopColor="#FFFFFF"/>
+                          <stop offset="1" stopColor="#E5E7EB"/>
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                  </div>
+                  <h3 className={styles.serviceTitle}>Health</h3>
+                  <p className={styles.serviceDescription}>Daily health monitoring and personalized wellness recommendations based on your activities and conditions, helping you maintain optimal health.</p>
+                </div>
+              </>
+            )}
           </div>
+
+          <button 
+            onClick={() => setShowAllServices(!showAllServices)}
+            className={styles.viewMoreButton}
+          >
+            {showAllServices ? 'View less' : 'View more'}
+            <svg 
+              className={`${styles.buttonArrow} ${showAllServices ? styles.buttonArrowUp : ''}`}
+              width="16" 
+              height="16" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2.5" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            >
+              <polyline points="8 4 16 12 8 20" />
+            </svg>
+          </button>
         </div>
       </div>
 

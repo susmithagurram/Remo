@@ -568,6 +568,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 2.5rem;
+        margin-bottom: 3rem;
         
         .service-block {
           background: rgba(23, 23, 23, 0.95);
@@ -615,16 +616,24 @@
           }
 
           .service-icon {
-            width: 70px;
-            height: 70px;
+            width: 200px;
+            height: 150px;
             margin: 0 auto 2rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
+            border-radius: 12px;
             
-            svg {
+            .serviceImage {
               width: 100%;
               height: 100%;
+              object-fit: cover;
+              transition: transform 0.3s ease;
+              
+              &:hover {
+                transform: scale(1.05);
+              }
             }
           }
 
@@ -643,6 +652,48 @@
             color: rgba(255, 255, 255, 0.7);
             font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
             margin: 0;
+          }
+        }
+      }
+
+      .viewMoreButton {
+        padding: 0.8rem 2rem;
+        border: none;
+        border-radius: 50px;
+        background: transparent;
+        color: #fff;
+        font-size: 1.1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        outline: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-top: 2rem;
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        min-width: 180px;
+
+        .buttonArrow {
+          transition: transform 0.3s ease;
+        }
+
+        .buttonArrowUp {
+          transform: rotate(-90deg);
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+          border-color: rgba(255, 255, 255, 0.3);
+
+          .buttonArrow {
+            transform: translateX(3px);
+          }
+
+          .buttonArrowUp {
+            transform: rotate(-90deg) translateX(-3px);
           }
         }
       }
