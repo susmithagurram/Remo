@@ -28,6 +28,16 @@ const Home = () => {
     }
   };
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   // Redirect to chat page when authenticated
   useEffect(() => {
     if (authenticated) {
@@ -38,7 +48,35 @@ const Home = () => {
   return (
     <div className={styles.home}>
       <nav className={styles.navbar}>
-        <div className={styles.logo}>REMO</div>
+        <div className={styles.navLeft}>
+          <div className={styles.logo}>REMO</div>
+          <div className={styles.navLinks}>
+            <div 
+              className={styles.navItem}
+              onClick={() => scrollToSection('about')}
+            >
+              About
+              <svg className={styles.dropdownIcon} width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <div 
+              className={styles.navItem}
+              onClick={() => scrollToSection('features')}
+            >
+              Features
+              <svg className={styles.dropdownIcon} width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <div className={styles.navItem}>
+              Docs
+              <svg className={styles.dropdownIcon} width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
         <div className={styles.iconGroup}>
           <button 
             type="button" 
@@ -101,7 +139,7 @@ const Home = () => {
         </button>
       </div>
 
-      <div className={styles.descriptionSection}>
+      <div id="about" className={styles.descriptionSection}>
         <div className={styles.descriptionContent}>
           <div className={styles.descriptionText}>
             Project Remo is your Personal AI assistant which helps you to do all the activities as same as a hired assistant.
@@ -116,24 +154,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className={styles.trustedSection}>
-        <div className={styles.trustedContent}>
-          <h2 className={styles.trustedHeading}>TRUSTED BY</h2>
-          <div className={styles.trustedLogos}>
-            <div className={styles.trustedItem}>
-              <span className={styles.companyName}>Autonome</span>
-            </div>
-            <div className={styles.trustedItem}>
-              <span className={styles.companyName}>Privy</span>
-            </div>
-            <div className={styles.trustedItem}>
-              <span className={styles.companyName}>OpenAI</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className={styles.featuresSection}>
+      <div id="features" className={styles.featuresSection}>
         <div className={styles.featuresContent}>
           <h2 className={styles.featuresHeading}>FEATURES</h2>
           <div className={styles.featuresGrid}>
