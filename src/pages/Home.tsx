@@ -128,7 +128,8 @@ const Home = () => {
           <span className={styles.remo}>REMO</span>
         </div>
         <div className={styles.textLine}>
-          Personal AI Assistant that can be hired by every human in the planet
+          Personal AI Assistant that can be hired by every human<br />
+          in the planet
         </div>
         <button 
           type="button" 
@@ -146,7 +147,7 @@ const Home = () => {
           </div>
           <div className={styles.descriptionTextWrapper}>
             <div className={styles.descriptionText}>
-              Remo is a <strong>"AI Personal Assistant"</strong> who can be hired by every human on planet.
+              Remo is a "AI Personal Assistant" who can be hired by every human on planet.
               <br /><br />
               How about reminding you what to do, buy a stock/coin when you are enjoying your vacation, with an unimaginable trust.
               <br /><br />
