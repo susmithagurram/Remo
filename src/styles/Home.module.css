@@ -191,28 +191,40 @@
     }
 
     .createButton {
-      padding: 1rem 2.5rem;
+      padding: 0.8rem 1.5rem;
       border: none;
       border-radius: 50px;
       background: #fff;
       color: #000;
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 500;
       transition: all 0.3s ease;
       cursor: pointer;
       outline: none;
-      min-width: 300px;
+      min-width: auto;
       margin-top: 1rem;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
       text-align: center;
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
       position: relative;
       letter-spacing: 0.5px;
       
+      .buttonArrow {
+        transition: transform 0.3s ease;
+        margin-left: -0.25rem;
+      }
+      
       &:hover {
         transform: translateY(-3px);
         box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
         background: rgba(255, 255, 255, 0.95);
+
+        .buttonArrow {
+          transform: translateX(3px);
+        }
       }
 
       &:active {
@@ -221,9 +233,9 @@
     }
 
     .largeButton {
-      font-size: 1.3rem;
-      padding: 1.2rem 3rem;
-      min-width: 400px;
+      font-size: 1.1rem;
+      padding: 1rem 2rem;
+      min-width: auto;
       border-radius: 50px;
     }
   }

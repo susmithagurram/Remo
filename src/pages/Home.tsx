@@ -138,6 +138,19 @@ const Home = () => {
           className={`${styles.createButton} ${styles.largeButton}`}
         >
           Remo, being awesome is my thing
+          <svg 
+            className={styles.buttonArrow} 
+            width="16" 
+            height="16" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2.5" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+          >
+            <polyline points="8 4 16 12 8 20" />
+          </svg>
         </button>
       </div>
 
