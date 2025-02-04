@@ -1,7 +1,10 @@
 import { usePrivy } from '@privy-io/react-auth';
 import { useState, useEffect } from 'react';
 import styles from '../styles/Profile.module.css';
-import { dynamoDBService, UserData } from '../utils/dynamoDBService';
+import { dynamoDBService } from '../utils/dynamoDBService';
+import RemoWallets from '../agent/agentkit/RemoWallets';
+import { RemoWallet } from '../agent/agentkit/types';
+import { walletService } from '../agent/agentkit/walletService';
 
 const Profile = () => {
   const { user, ready, linkWallet, linkEmail, linkTwitter, createWallet } = usePrivy();
@@ -47,6 +50,9 @@ const Profile = () => {
           setIsLoading(true);
           setError(null);
           try {
+            // Initialize wallet service for this user
+            await walletService.initializeForUser(userId);
+
             const userData = await dynamoDBService.getUserData(userId);
             if (userData) {
               setUsername(userData.username);
@@ -98,6 +104,10 @@ const Profile = () => {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleWalletSelect = (wallet: RemoWallet) => {
+    console.log('Selected wallet:', wallet);
   };
 
   if (!ready || !user || isLoading) return null;
@@ -173,6 +183,8 @@ const Profile = () => {
             )}
           </div>
         </div>
+
+        <RemoWallets onWalletSelect={handleWalletSelect} />
 
         <div className={styles.profileCard}>
           <h2>🔗 Connected Accounts</h2>

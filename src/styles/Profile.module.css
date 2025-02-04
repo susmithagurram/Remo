@@ -179,6 +179,117 @@
       }
     }
   }
+
+  .walletsList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .walletItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateX(5px);
+    }
+
+    &.selected {
+      background: rgba(103, 111, 255, 0.15);
+      border-color: rgba(103, 111, 255, 0.3);
+    }
+  }
+
+  .walletInfo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .walletIcon {
+    font-size: 1.5rem;
+  }
+
+  .walletDetails {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .walletName {
+    font-weight: 500;
+    color: #fff;
+  }
+
+  .walletAddress {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .selectedBadge {
+    padding: 0.4rem 1rem;
+    background: rgba(103, 111, 255, 0.2);
+    color: #676FFF;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .createWalletForm {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .walletNameInput {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s ease;
+
+    &:focus {
+      border-color: rgba(103, 111, 255, 0.5);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .createWalletButton {
+    padding: 0.8rem 1.5rem;
+    background: rgba(103, 111, 255, 0.15);
+    border: 1px solid rgba(103, 111, 255, 0.3);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background: rgba(103, 111, 255, 0.25);
+      transform: translateY(-2px);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
 }
 
 .usernameEdit {
@@ -249,4 +360,66 @@
 .usernameInput:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.walletActions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.selectButton,
+.copyButton {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid;
+}
+
+.selectButton {
+  background: rgba(103, 111, 255, 0.15);
+  border-color: rgba(103, 111, 255, 0.3);
+  color: #676FFF;
+}
+
+.selectButton:hover {
+  background: rgba(103, 111, 255, 0.25);
+}
+
+.copyButton {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.copyButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.addressContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.copyAddressButton {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  padding: 0.2rem;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+}
+
+.copyAddressButton:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 } 
