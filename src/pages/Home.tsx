@@ -141,16 +141,18 @@ const Home = () => {
 
       <div id="about" className={styles.descriptionSection}>
         <div className={styles.descriptionContent}>
-          <div className={styles.descriptionText}>
-            Project Remo is your Personal AI assistant which helps you to do all the activities as same as a hired assistant.
+          <div className={styles.descriptionImage}>
+            <img src="/About.jpg" alt="Remo AI Assistant" />
           </div>
-          <button 
-            type="button" 
-            onClick={handleLoginClick} 
-            className={`${styles.createButton} ${styles.largeButton}`}
-          >
-            Remo, being awesome is my thing
-          </button>
+          <div className={styles.descriptionTextWrapper}>
+            <div className={styles.descriptionText}>
+              Remo is a <strong>"AI Personal Assistant"</strong> who can be hired by every human on planet.
+              <br /><br />
+              How about reminding you what to do, buy a stock/coin when you are enjoying your vacation, with an unimaginable trust.
+              <br /><br />
+              It's time for everyone to have their own assistant not just the rich!
+            </div>
+          </div>
         </div>
       </div>
 
