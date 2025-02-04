@@ -95,9 +95,9 @@ const Home = () => {
         <button 
           type="button" 
           onClick={handleLoginClick} 
-          className={styles.createButton}
+          className={`${styles.createButton} ${styles.largeButton}`}
         >
-          Create Your Agent Now
+          Remo, being awesome is my thing
         </button>
       </div>
 
@@ -109,9 +109,9 @@ const Home = () => {
           <button 
             type="button" 
             onClick={handleLoginClick} 
-            className={styles.createButton}
+            className={`${styles.createButton} ${styles.largeButton}`}
           >
-            Hello, I am Remo your....
+            Remo, being awesome is my thing
           </button>
         </div>
       </div>
