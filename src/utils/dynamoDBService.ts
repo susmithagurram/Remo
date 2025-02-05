@@ -2,6 +2,7 @@ import { DynamoDBClient, CreateTableCommand, DescribeTableCommand } from '@aws-s
 import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
 import { RemoWallet, Contact } from '../agent/viem/types';
 import { encryptPrivateKey, decryptPrivateKey } from './encryption';
+import { Task } from '../agent/tasks/types';
 
 // Log environment variables (without sensitive data)
 console.log('AWS Region:', import.meta.env.VITE_AWS_REGION);
@@ -24,6 +25,7 @@ const docClient = DynamoDBDocumentClient.from(client, {
 const USER_TABLE = 'remo_users';
 const WALLET_TABLE = 'remo_wallets';
 const CONTACTS_TABLE = 'remo_contacts';
+const TASKS_TABLE = 'remo_tasks';
 
 export interface UserData {
   userId: string;  // This will be the wallet address or unique identifier
@@ -89,6 +91,11 @@ const ensureTable = async (tableName: string, keySchema: any) => {
         AttributeName: 'contactId', 
         KeyType: 'RANGE'
       }
+    ]);
+
+    await ensureTable(TASKS_TABLE, [
+      { AttributeName: 'userId', KeyType: 'HASH' },
+      { AttributeName: 'id', KeyType: 'RANGE' },
     ]);
   } catch (error) {
     console.error('Error initializing tables:', error);
@@ -350,6 +357,76 @@ export const dynamoDBService = {
         code: error.$metadata?.httpStatusCode
       });
       throw new Error(`Failed to delete contact: ${error.message}`);
+    }
+  },
+
+  async getTasks(userId: string): Promise<Task[]> {
+    try {
+      console.log('Fetching tasks for userId:', userId);
+      const command = new QueryCommand({
+        TableName: TASKS_TABLE,
+        KeyConditionExpression: 'userId = :userId',
+        ExpressionAttributeValues: {
+          ':userId': userId,
+        },
+      });
+
+      const response = await docClient.send(command);
+      return (response.Items || []) as Task[];
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+      throw error;
+    }
+  },
+
+  async getTask(userId: string, taskId: string): Promise<Task | null> {
+    try {
+      const command = new GetCommand({
+        TableName: TASKS_TABLE,
+        Key: {
+          userId,
+          id: taskId,
+        },
+      });
+
+      const response = await docClient.send(command);
+      return (response.Item as Task) || null;
+    } catch (error) {
+      console.error('Error fetching task:', error);
+      throw error;
+    }
+  },
+
+  async saveTask(task: Task): Promise<boolean> {
+    try {
+      const command = new PutCommand({
+        TableName: TASKS_TABLE,
+        Item: task,
+      });
+
+      await docClient.send(command);
+      return true;
+    } catch (error) {
+      console.error('Error saving task:', error);
+      throw error;
+    }
+  },
+
+  async deleteTask(userId: string, taskId: string): Promise<boolean> {
+    try {
+      const command = new DeleteCommand({
+        TableName: TASKS_TABLE,
+        Key: {
+          userId,
+          id: taskId,
+        },
+      });
+
+      await docClient.send(command);
+      return true;
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      throw error;
     }
   },
 }; 

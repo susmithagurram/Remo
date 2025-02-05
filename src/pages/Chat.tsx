@@ -23,10 +23,13 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      // Get the user's wallet address
+      // Get the connected wallet address
       const walletAccount = user.linkedAccounts?.find(account => account.type === 'wallet');
       if (walletAccount?.address) {
+        console.log('Setting userId from connected wallet:', walletAccount.address);
         bedrockService.setUserId(walletAccount.address);
+      } else {
+        console.log('No connected wallet found');
       }
     }
   }, [user]);

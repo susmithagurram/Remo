@@ -5,6 +5,7 @@ import { parseTransactionCommand } from './viem/transactionParser';
 import { walletService } from './viem/walletService';
 import { contactsService } from './contacts/contactsService';
 import { dynamoDBService } from '../utils/dynamoDBService';
+import { tasksService } from './tasks/tasksService';
 
 class BedrockService {
   private client: BedrockRuntimeClient;
@@ -217,6 +218,83 @@ class BedrockService {
             } else {
               return `The transaction failed: ${error.message}\n\nPlease verify:\n1. You have enough Sepolia ETH for the transaction and gas fees\n2. The recipient address is correct\n3. The network is functioning properly\n\nWould you like me to help troubleshoot?`;
             }
+          }
+        }
+
+        // Check for task creation
+        const createTaskRequest = lastMessage.content.toLowerCase()
+          .match(/(?:create|add|make)\s+(?:a\s+)?(?:new\s+)?task(?:\s+to\s+do)?[:\s]+(.+)/i);
+
+        if (createTaskRequest) {
+          const [_, taskTitle] = createTaskRequest;
+          if (!this.userId) {
+            return "I need you to connect your wallet first to manage tasks.";
+          }
+
+          try {
+            const task = await tasksService.createTask(this.userId, taskTitle.trim());
+            return `I've created a new task: "${task.title}"`;
+          } catch (error) {
+            console.error('Error creating task:', error);
+            return "I had trouble creating the task. Please try again later.";
+          }
+        }
+
+        // Check for task completion
+        const completeTaskRequest = lastMessage.content.toLowerCase()
+          .match(/(?:complete|finish|mark done|mark completed)\s+task[:\s]+(.+)/i);
+
+        if (completeTaskRequest) {
+          const [_, taskTitle] = completeTaskRequest;
+          if (!this.userId) {
+            return "I need you to connect your wallet first to manage tasks.";
+          }
+
+          try {
+            const tasks = await tasksService.listTasks(this.userId);
+            const task = tasks.find(t => t.title.toLowerCase() === taskTitle.trim().toLowerCase());
+            if (!task) {
+              return `I couldn't find a task titled "${taskTitle}". Please check the title and try again.`;
+            }
+
+            await tasksService.updateTask(this.userId, task.id, { status: 'completed' });
+            return `I've marked the task "${task.title}" as completed!`;
+          } catch (error) {
+            console.error('Error completing task:', error);
+            return "I had trouble updating the task. Please try again later.";
+          }
+        }
+
+        // Check for task list request
+        const listTasksRequest = lastMessage.content.toLowerCase()
+          .match(/(?:show|list|display|get|what are)\s+(?:my\s+)?(?:pending\s+)?tasks/i);
+
+        if (listTasksRequest) {
+          if (!this.userId) {
+            return "I need you to connect your wallet first to view tasks.";
+          }
+
+          try {
+            const tasks = await tasksService.listTasks(this.userId);
+            if (tasks.length === 0) {
+              return "You don't have any tasks yet. Would you like to create one?";
+            }
+
+            const pendingTasks = tasks.filter(t => t.status === 'pending');
+            const completedTasks = tasks.filter(t => t.status === 'completed');
+
+            let response = "Here are your tasks:\n\n";
+            if (pendingTasks.length > 0) {
+              response += "📝 Pending Tasks:\n" + pendingTasks.map(t => `- ${t.title}`).join('\n') + '\n\n';
+            }
+            if (completedTasks.length > 0) {
+              response += "✅ Completed Tasks:\n" + completedTasks.map(t => `- ${t.title}`).join('\n');
+            }
+
+            return response;
+          } catch (error) {
+            console.error('Error listing tasks:', error);
+            return "I had trouble retrieving your tasks. Please try again later.";
           }
         }
       }

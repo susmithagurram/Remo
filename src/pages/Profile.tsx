@@ -20,11 +20,11 @@ const Profile = () => {
   // Helper function to get user's unique ID
   const getUserId = () => {
     if (!user) return null;
-    // Use wallet address as primary identifier if available
+    // Use connected wallet address as primary identifier
     const walletAccount = user.linkedAccounts?.find(account => account.type === 'wallet');
-    if (walletAccount?.address) return walletAccount.address;
-    // Fallback to email if no wallet
-    if (user.email) return user.email.toString();
+    if (walletAccount?.address) {
+      return walletAccount.address;
+    }
     return null;
   };
 
