@@ -9,6 +9,7 @@ import { dynamoDBService } from '../utils/dynamoDBService';
 class BedrockService {
   private client: BedrockRuntimeClient;
   private userId: string | null = null;
+  private pendingTransaction: any = null;
 
   constructor() {
     this.client = new BedrockRuntimeClient({
@@ -31,6 +32,79 @@ class BedrockService {
       console.log('Processing message:', lastMessage.content);
 
       if (lastMessage.role === 'user') {
+        // Check for send ETH to contact request
+        const sendRequest = lastMessage.content.toLowerCase()
+          .match(/(?:can you |please |)(?:send|transfer)\s*([\d.]+)\s*(?:eth|ether|)\s*(?:to|for)\s+(?:contact |my contact |)([a-zA-Z0-9]+)/i);
+
+        if (sendRequest) {
+          console.log('Send request matched:', sendRequest);
+          const [_, amount, contactName] = sendRequest;
+          console.log('Parsed send request:', { amount, contactName });
+
+          if (!this.userId) {
+            return "I need you to connect your wallet first to send ETH.";
+          }
+
+          try {
+            // Find the contact
+            const contact = await contactsService.findContactByName(this.userId, contactName);
+            if (!contact) {
+              return `I couldn't find a contact named "${contactName}". Please check the name and try again.`;
+            }
+
+            // Get selected wallet
+            const selectedWallet = walletService.getSelectedWallet();
+            if (!selectedWallet) {
+              return "Please select a wallet in your profile first to send ETH.";
+            }
+
+            // Create transaction request
+            const txRequest = {
+              from: selectedWallet.address,
+              to: contact.walletAddress,
+              value: (parseFloat(amount) * 1e18).toString(),
+            };
+
+            // Store the transaction request for later use
+            this.pendingTransaction = txRequest;
+
+            // Ask for confirmation
+            return `I found ${contactName}'s wallet address (${contact.walletAddress}). Would you like me to send ${amount} ETH from your wallet (${selectedWallet.address})? Please confirm with "yes" or "confirm".`;
+          } catch (error) {
+            console.error('Error processing send request:', error);
+            return "I had trouble processing your request. Please try again later.";
+          }
+        }
+
+        // Check for confirmation
+        const confirmRequest = lastMessage.content.toLowerCase().match(/^(?:yes|confirm|proceed)$/);
+        if (confirmRequest && messages.length >= 2) {
+          const previousMessage = messages[messages.length - 2];
+          if (previousMessage.role === 'assistant' && previousMessage.content.includes('Would you like me to send')) {
+            try {
+              if (!this.pendingTransaction) {
+                return "I couldn't find the transaction details. Please start over.";
+              }
+
+              const selectedWallet = walletService.getSelectedWallet();
+              if (!selectedWallet) {
+                return "The wallet is no longer selected. Please try again.";
+              }
+
+              const tx = await walletService.sendTransaction(this.pendingTransaction);
+              this.pendingTransaction = null; // Clear after use
+
+              return `Transaction sent! You can track it here: https://sepolia.etherscan.io/tx/${tx.hash}`;
+            } catch (error: any) {
+              console.error('Error sending transaction:', error);
+              if (error.message.includes('insufficient funds')) {
+                return "You don't have enough ETH in your wallet for this transaction. Please check your balance and try again.";
+              }
+              return `Failed to send transaction: ${error.message}`;
+            }
+          }
+        }
+
         // Check for save contact request
         const saveRequest = lastMessage.content.toLowerCase()
           .match(/(?:can you |please |)(?:save|add|create)\s*(?:the |a |)(?:new |)contact(?:s|)\s*(?:with |named |name:|for |)\s*([a-zA-Z0-9]+)\s*(?:,|\s)\s*(?:wallet:|address:|with address:|with wallet:|\s)\s*(0x[a-fA-F0-9]{40})/i);
