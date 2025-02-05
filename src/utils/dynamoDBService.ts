@@ -1,6 +1,6 @@
 import { DynamoDBClient, CreateTableCommand, DescribeTableCommand } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
-import { RemoWallet } from '../agent/viem/types';
+import { RemoWallet, Contact } from '../agent/viem/types';
 import { encryptPrivateKey, decryptPrivateKey } from './encryption';
 
 // Log environment variables (without sensitive data)
@@ -23,6 +23,7 @@ const docClient = DynamoDBDocumentClient.from(client, {
 
 const USER_TABLE = 'remo_users';
 const WALLET_TABLE = 'remo_wallets';
+const CONTACTS_TABLE = 'remo_contacts';
 
 export interface UserData {
   userId: string;  // This will be the wallet address or unique identifier
@@ -77,6 +78,17 @@ const ensureTable = async (tableName: string, keySchema: any) => {
     await ensureTable(WALLET_TABLE, [
       { AttributeName: 'userId', KeyType: 'HASH' },
       { AttributeName: 'walletId', KeyType: 'RANGE' },
+    ]);
+
+    await ensureTable(CONTACTS_TABLE, [
+      { 
+        AttributeName: 'userId', 
+        KeyType: 'HASH'
+      },
+      { 
+        AttributeName: 'contactId', 
+        KeyType: 'RANGE'
+      }
     ]);
   } catch (error) {
     console.error('Error initializing tables:', error);
@@ -272,6 +284,72 @@ export const dynamoDBService = {
     } catch (error) {
       console.error('Error deleting wallet:', error);
       throw error;
+    }
+  },
+
+  async getContacts(userId: string): Promise<Contact[]> {
+    try {
+      console.log('Fetching contacts for userId:', userId);
+      const command = new QueryCommand({
+        TableName: CONTACTS_TABLE,
+        KeyConditionExpression: 'userId = :userId',
+        ExpressionAttributeValues: {
+          ':userId': userId,
+        },
+      });
+
+      const response = await docClient.send(command);
+      console.log('DynamoDB response:', response);
+      console.log('Found contacts:', response.Items);
+      return (response.Items || []) as Contact[];
+    } catch (error) {
+      console.error('Error fetching contacts:', error);
+      throw error;
+    }
+  },
+
+  async saveContact(contact: Contact): Promise<boolean> {
+    try {
+      console.log('Saving contact:', contact);
+      const command = new PutCommand({
+        TableName: CONTACTS_TABLE,
+        Item: contact,
+      });
+
+      await docClient.send(command);
+      console.log('Contact saved successfully');
+      return true;
+    } catch (error: any) {
+      console.error('Save error:', {
+        name: error.name,
+        message: error.message,
+        code: error.$metadata?.httpStatusCode
+      });
+      throw new Error(`Failed to save contact: ${error.message}`);
+    }
+  },
+
+  async deleteContact(userId: string, id: string): Promise<boolean> {
+    try {
+      console.log('Attempting to delete contact:', { userId, id });
+      const command = new DeleteCommand({
+        TableName: CONTACTS_TABLE,
+        Key: {
+          userId,
+          id  // Changed from contactId to id to match our schema
+        }
+      });
+
+      await docClient.send(command);
+      console.log('Contact deleted successfully');
+      return true;
+    } catch (error: any) {
+      console.error('Delete error:', {
+        name: error.name,
+        message: error.message,
+        code: error.$metadata?.httpStatusCode
+      });
+      throw new Error(`Failed to delete contact: ${error.message}`);
     }
   },
 }; 

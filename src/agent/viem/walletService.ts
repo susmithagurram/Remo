@@ -69,6 +69,7 @@ class WalletService {
         createdAt: Date.now(),
         balance: '0.0',
         privateKey,
+        userId: this.userId
       };
 
       console.log('Attempting to save wallet to DynamoDB...');

@@ -1,10 +1,14 @@
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 import { Message } from './types';
+import { Contact } from './viem/types';
 import { parseTransactionCommand } from './viem/transactionParser';
 import { walletService } from './viem/walletService';
+import { contactsService } from './contacts/contactsService';
+import { dynamoDBService } from '../utils/dynamoDBService';
 
 class BedrockService {
   private client: BedrockRuntimeClient;
+  private userId: string | null = null;
 
   constructor() {
     this.client = new BedrockRuntimeClient({
@@ -16,14 +20,102 @@ class BedrockService {
     });
   }
 
+  setUserId(userId: string) {
+    console.log('Setting bedrockService userId:', userId);
+    this.userId = userId;
+  }
+
   async generateResponse(messages: Message[]): Promise<string> {
     try {
-      // Check if the last message is a transaction request
       const lastMessage = messages[messages.length - 1];
+      console.log('Processing message:', lastMessage.content);
+
       if (lastMessage.role === 'user') {
-        // Check for wallet address request
-        const addressRequest = lastMessage.content.toLowerCase().match(/(?:what'?s|what is|share|tell me|show|get) (?:your|the|my|current|selected) (?:wallet )?address/);
+        // Check for save contact request
+        const saveRequest = lastMessage.content.toLowerCase()
+          .match(/(?:can you |please |)(?:save|add|create)\s*(?:the |a |)(?:new |)contact(?:s|)\s*(?:with |named |name:|for |)\s*([a-zA-Z0-9]+)\s*(?:,|\s)\s*(?:wallet:|address:|with address:|with wallet:|\s)\s*(0x[a-fA-F0-9]{40})/i);
+
+        console.log('Save request match result:', saveRequest);
+
+        if (saveRequest) {
+          console.log('Save request matched:', saveRequest);
+          const [fullMatch, name, address] = saveRequest;
+          console.log('Parsed save request:', { fullMatch, name, address });
+          
+          if (!this.userId) {
+            console.log('No userId found for saving contact');
+            return "I need you to connect your wallet first to save contacts.";
+          }
+
+          try {
+            console.log('Starting contact save process for userId:', this.userId);
+            const timestamp = Date.now();
+            const contact: Contact = {
+              id: `${timestamp}`,
+              contactId: `${timestamp}`,
+              userId: this.userId,
+              name: name.trim(),
+              walletAddress: address.trim(),
+              createdAt: timestamp,
+              updatedAt: timestamp,
+            };
+            console.log('Created contact object:', contact);
+
+            console.log('Checking for existing contact...');
+            await contactsService.loadUserContacts(this.userId);
+            const existingContact = await contactsService.findContactByName(this.userId, name);
+            console.log('Existing contact check result:', existingContact);
+
+            if (existingContact) {
+              console.log('Found existing contact with same name');
+              return `A contact named "${name}" already exists. Please use a different name.`;
+            }
+
+            console.log('Attempting to save contact to DynamoDB...');
+            await dynamoDBService.saveContact(contact);
+            console.log('Successfully saved contact to DynamoDB');
+            
+            // Reload contacts to verify save
+            await contactsService.loadUserContacts(this.userId);
+            const verifyContact = await contactsService.findContactByName(this.userId, name);
+            console.log('Verification of saved contact:', verifyContact);
+
+            return `I've saved ${name} to your contacts with address ${address}`;
+          } catch (error) {
+            console.error('Error in save contact process:', error);
+            return "I had trouble saving the contact. Please try again later.";
+          }
+        }
+
+        // Check for contact address request
+        const addressRequest = lastMessage.content.toLowerCase()
+          .match(/(?:what(?:'s| is)|get|show|tell me|find)?\s*(?:the\s+)?(?:wallet\s+)?address(?:\s+of|\s+for|\s+)?\s*([a-zA-Z0-9\s]+)/i);
+        
         if (addressRequest) {
+          const contactName = addressRequest[1];
+          console.log('Current bedrockService userId:', this.userId);
+          if (!this.userId) {
+            return "I'm having trouble accessing your contacts. Please try again in a moment.";
+          }
+
+          try {
+            console.log('Looking up contact:', contactName, 'for userId:', this.userId);
+            const contact = await contactsService.findContactByName(this.userId, contactName);
+            console.log('Found contact:', contact);
+            if (contact) {
+              return `The wallet address for ${contact.name} is: ${contact.walletAddress}`;
+            } else {
+              return `I couldn't find a contact named "${contactName}" in your contacts. You can add them in your profile under the Contacts section.`;
+            }
+          } catch (error) {
+            console.error('Error looking up contact:', error);
+            return "I had trouble accessing your contacts. Please try again later.";
+          }
+        }
+
+        // Handle Remo wallet-specific requests
+        const walletRequest = lastMessage.content.toLowerCase().match(/(?:what'?s|what is|share|tell me|show|get) (?:your|the|my|current|selected) (?:wallet )?address/);
+        if (walletRequest) {
           const selectedWallet = walletService.getSelectedWallet();
           if (!selectedWallet) {
             return "I don't have a selected wallet yet. Please go to your profile and select a wallet first.";
@@ -79,8 +171,8 @@ ${this.formatMessages(messages)}`;
       
       return parsedResponse.completion;
     } catch (error) {
-      console.error('Error generating response:', error);
-      throw new Error('Failed to generate response');
+      console.error('Error in generateResponse:', error);
+      return "I encountered an error. Please try again.";
     }
   }
 

@@ -21,6 +21,16 @@ const Chat: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (user) {
+      // Get the user's wallet address
+      const walletAccount = user.linkedAccounts?.find(account => account.type === 'wallet');
+      if (walletAccount?.address) {
+        bedrockService.setUserId(walletAccount.address);
+      }
+    }
+  }, [user]);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };

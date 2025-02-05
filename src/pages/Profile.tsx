@@ -5,6 +5,9 @@ import { dynamoDBService } from '../utils/dynamoDBService';
 import RemoWallets from '../agent/viem/RemoWallets';
 import { RemoWallet } from '../agent/viem/types';
 import { walletService } from '../agent/viem/walletService';
+import Contacts from '../agent/contacts/Contacts';
+import { contactsService } from '../agent/contacts/contactsService';
+import { bedrockService } from '../agent/bedrockService';
 
 const Profile = () => {
   const { user, ready, linkWallet, linkEmail, linkTwitter, createWallet } = usePrivy();
@@ -45,13 +48,18 @@ const Profile = () => {
   useEffect(() => {
     const loadUserData = async () => {
       if (ready && user) {
+        // Make user available globally for Remo
+        window._privyUser = user;
+        
         const userId = getUserId();
         if (userId) {
           setIsLoading(true);
           setError(null);
           try {
-            // Initialize wallet service for this user
+            // Initialize services with userId
             await walletService.initializeForUser(userId);
+            await contactsService.loadUserContacts(userId);
+            bedrockService.setUserId(userId);
 
             const userData = await dynamoDBService.getUserData(userId);
             if (userData) {
@@ -114,6 +122,7 @@ const Profile = () => {
 
   const connectedAccounts = user.linkedAccounts;
   const hasEmbeddedWallet = connectedAccounts.some(account => account.type === 'smart_wallet');
+  const userId = getUserId();
 
   return (
     <div className={styles.profilePage}>
@@ -185,6 +194,8 @@ const Profile = () => {
         </div>
 
         <RemoWallets onWalletSelect={handleWalletSelect} />
+
+        {userId && <Contacts userId={userId} />}
 
         <div className={styles.profileCard}>
           <h2>🔗 Connected Accounts</h2>

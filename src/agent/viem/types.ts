@@ -6,6 +6,7 @@ export interface RemoWallet {
   createdAt: number;
   balance?: string;
   privateKey: string;
+  userId?: string;
 }
 
 export interface TransactionRequest {
@@ -29,4 +30,14 @@ export interface WalletState {
   wallets: RemoWallet[];
   isLoading: boolean;
   error: string | null;
+}
+
+export interface Contact {
+  id: string;
+  contactId: string;
+  userId: string;
+  name: string;
+  walletAddress: string;
+  createdAt: number;
+  updatedAt: number;
 } 
