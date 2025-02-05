@@ -3,7 +3,6 @@ import { usePrivy } from '@privy-io/react-auth';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/Chat.module.css';
 import { bedrockService } from '../agent/bedrockService';
-import { remoPersonality } from '../agent/config';
 
 interface Message {
   id: string;

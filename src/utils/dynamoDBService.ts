@@ -1,6 +1,6 @@
 import { DynamoDBClient, CreateTableCommand, DescribeTableCommand } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
-import { RemoWallet } from '../agent/agentkit/types';
+import { RemoWallet } from '../agent/viem/types';
 import { encryptPrivateKey, decryptPrivateKey } from './encryption';
 
 // Log environment variables (without sensitive data)

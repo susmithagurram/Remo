@@ -2,9 +2,9 @@ import { usePrivy } from '@privy-io/react-auth';
 import { useState, useEffect } from 'react';
 import styles from '../styles/Profile.module.css';
 import { dynamoDBService } from '../utils/dynamoDBService';
-import RemoWallets from '../agent/agentkit/RemoWallets';
-import { RemoWallet } from '../agent/agentkit/types';
-import { walletService } from '../agent/agentkit/walletService';
+import RemoWallets from '../agent/viem/RemoWallets';
+import { RemoWallet } from '../agent/viem/types';
+import { walletService } from '../agent/viem/walletService';
 
 const Profile = () => {
   const { user, ready, linkWallet, linkEmail, linkTwitter, createWallet } = usePrivy();

@@ -1,18 +1,17 @@
 import { usePrivy } from '@privy-io/react-auth';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useLogin } from '../context/LoginContext';
 import styles from '../styles/Home.module.css';
 
 const Home = () => {
   const { authenticated } = usePrivy();
-  const { openLogin } = useLogin();
+  const { login } = usePrivy();
   const navigate = useNavigate();
   const [showAllServices, setShowAllServices] = useState(false);
 
   const handleLoginClick = () => {
     console.log('Create Agent clicked');
-    openLogin();
+    login();
   };
 
   const handleSearchClick = () => {
@@ -23,7 +22,7 @@ const Home = () => {
   const handleAIClick = () => {
     console.log('AI icon clicked');
     if (!authenticated) {
-      openLogin();
+      login();
     } else {
       navigate('/chat');
     }

@@ -1,9 +1,6 @@
 import { TransactionRequest } from './types';
 
 export function parseTransactionCommand(message: string): TransactionRequest | null {
-  // Convert message to lowercase for easier matching
-  const lowerMessage = message.toLowerCase();
-
   // Match various transaction patterns
   const patterns = [
     // Basic "send X to address" pattern

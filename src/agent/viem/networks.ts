@@ -1,4 +1,4 @@
-import { Chain, createPublicClient, http, createWalletClient, WalletClient, PublicClient } from 'viem';
+import { type Chain, createPublicClient, http, createWalletClient, type WalletClient, type PublicClient } from 'viem';
 import { sepolia, mainnet, goerli } from 'viem/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 

@@ -1,7 +1,7 @@
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 import { Message } from './types';
-import { parseTransactionCommand } from './agentkit/transactionParser';
-import { walletService } from './agentkit/walletService';
+import { parseTransactionCommand } from './viem/transactionParser';
+import { walletService } from './viem/walletService';
 
 class BedrockService {
   private client: BedrockRuntimeClient;

@@ -1,7 +1,7 @@
-import { formatEther, type Chain, type PublicClient } from 'viem';
+import { formatEther, type Chain } from 'viem';
 import { RemoWallet, TransactionRequest, TransactionResponse } from './types';
 import { dynamoDBService } from '../../utils/dynamoDBService';
-import { DEFAULT_NETWORK, createNetworkClients } from '../../config/networks';
+import { DEFAULT_NETWORK, createNetworkClients } from './networks';
 
 class WalletService {
   private static instance: WalletService;
