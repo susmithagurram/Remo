@@ -21,6 +21,13 @@ const Chat: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
+  // Add new state for chat history
+  const [chatHistory] = useState([
+    { id: '1', title: 'Previous Chat 1' },
+    { id: '2', title: 'Previous Chat 2' },
+    { id: '3', title: 'Previous Chat 3' },
+  ]);
+
   useEffect(() => {
     if (user) {
       // Get the connected wallet address
@@ -109,63 +116,57 @@ const Chat: React.FC = () => {
       <div className={styles.sidebar}>
         <div className={styles.logo}>REMO</div>
         
-        {/* Local Section */}
-        <div className={styles.sidebarSection}>
-          <h2 className={styles.sectionTitle}>Create Using Local</h2>
-          <button 
-            className={styles.deployButton} 
-            onClick={handleLocalDeploy}
+        {/* New Chat Button */}
+        <button className={styles.newChatButton}>
+          <svg 
+            width="16" 
+            height="16" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2"
+            strokeLinecap="round" 
+            strokeLinejoin="round"
           >
-            <svg 
-              width="20" 
-              height="20" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2"
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            Deploy
-          </button>
-        </div>
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          New Chat
+        </button>
 
-        {/* Autonome Section */}
-        <div className={styles.sidebarSection}>
-          <h2 className={styles.sectionTitle}>Create Using Autonome</h2>
-          <button 
-            className={styles.deployButton} 
-            onClick={handleAutonomeDeploy}
-          >
-            <svg 
-              width="20" 
-              height="20" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2"
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            Deploy
-          </button>
+        {/* Chat History */}
+        <div className={styles.chatHistory}>
+          {chatHistory.map((chat) => (
+            <div key={chat.id} className={styles.chatItem}>
+              <span className={styles.chatIcon}>💬</span>
+              <span className={styles.chatTitle}>{chat.title}</span>
+            </div>
+          ))}
         </div>
+      </div>
 
-        {/* Profile Section */}
-        <div className={styles.sidebarSection}>
+      {/* Main Chat Area */}
+      <div className={styles.mainChat}>
+        {/* Top Navigation with Profile */}
+        <div className={styles.topNav}>
           <div className={styles.profileMenu}>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className={styles.profileButton}
             >
+              <svg 
+                width="16" 
+                height="16" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2"
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
               {getUserName()}
             </button>
             {isOpen && (
@@ -193,13 +194,11 @@ const Chat: React.FC = () => {
             )}
           </div>
         </div>
-      </div>
 
-      {/* Main Chat Area */}
-      <div className={styles.mainChat}>
         <div className={styles.welcomeMessage}>
           Hello, {getUserName()}
         </div>
+
         <div className={styles.messagesContainer}>
           {messages.map(message => (
             <div

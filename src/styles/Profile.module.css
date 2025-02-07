@@ -1,7 +1,7 @@
 .profile-page {
   min-height: 100vh;
   position: relative;
-  color: #fff;
+  color: #000;
   
   &::before {
     content: '';
@@ -10,9 +10,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('/Homebg7.jpg') no-repeat center center;
-    background-size: cover;
-    opacity: 0.99;
+    background: #FFFFFF;
     z-index: -1;
   }
 
@@ -32,33 +30,35 @@
         .avatar {
           width: 80px;
           height: 80px;
-          background: rgba(255, 255, 255, 0.1);
-          border: 2px solid rgba(255, 255, 255, 0.2);
+          background: rgba(0, 0, 0, 0.05);
+          border: 2px solid rgba(0, 0, 0, 0.1);
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
           font-size: 2rem;
           font-weight: bold;
+          color: #000;
         }
 
         h1 {
           font-size: 2.5rem;
           font-weight: bold;
+          color: #000;
         }
       }
     }
 
     .profile-card {
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.1);
       border-radius: 20px;
       padding: 2rem;
       margin-bottom: 2rem;
 
       h2 {
-        color: #fff;
+        color: #000;
         font-size: 1.5rem;
         font-weight: 600;
         margin-bottom: 1.5rem;
