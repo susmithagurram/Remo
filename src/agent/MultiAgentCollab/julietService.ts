@@ -1,12 +1,11 @@
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
-import { JulietResponse, BookRecommendation, TravelRecommendation } from './types';
+import { JulietResponse } from './types';
 
 class JulietService {
   private static instance: JulietService;
   private client: BedrockRuntimeClient;
-  private agentId: string = 'H0VMTFIK5P'; // Juliet's actual ID
-  private bookAgentId: string = 'BYSIK6CAIA';
-  private travelAgentId: string = '2DPENANVVK';
+  private bookAgentId: string = import.meta.env.VITE_BOOK_AGENT_ID;
+  private travelAgentId: string = import.meta.env.VITE_TRAVEL_AGENT_ID;
 
   private constructor() {
     this.client = new BedrockRuntimeClient({
@@ -33,10 +32,15 @@ class JulietService {
         contentType: 'application/json',
         accept: 'application/json',
         body: JSON.stringify({
-          prompt: `\n\nHuman: You are a book recommendation specialist agent (ID: ${this.bookAgentId}). 
-                  Based on the query: "${query}", provide relevant book recommendations.
-                  Include details about format, ratings, and brief descriptions.
-                  Format your response in a clear, structured way.\n\nAssistant:`,
+          prompt: `\n\nHuman: You are Remo's specialized book recommendation agent (ID: ${this.bookAgentId}). 
+As part of Remo's multi-agent system, you provide expert literary guidance and personalized book recommendations.
+Based on the query: "${query}", provide thoughtful recommendations with:
+- Title, author, and format options
+- Brief but engaging descriptions
+- Ratings and key highlights
+- Why this book might resonate with the user
+
+Format your response in a clear, structured way.\n\nAssistant:`,
           max_tokens_to_sample: 2000,
           temperature: 0.7,
           top_p: 0.9,
@@ -79,13 +83,16 @@ class JulietService {
         contentType: 'application/json',
         accept: 'application/json',
         body: JSON.stringify({
-          prompt: `\n\nHuman: You are a travel planning specialist agent (ID: ${this.travelAgentId}).
-                  Based on the query: "${query}", provide travel recommendations including:
-                  - Destinations
-                  - Activities
-                  - Best times to visit
-                  - Packing suggestions
-                  Format your response in a clear, structured way.\n\nAssistant:`,
+          prompt: `\n\nHuman: You are Remo's specialized travel planning agent (ID: ${this.travelAgentId}).
+As part of Remo's multi-agent system, you provide expert travel guidance and personalized recommendations.
+Based on the query: "${query}", create a comprehensive travel plan including:
+- Curated destination recommendations
+- Engaging activities and experiences
+- Optimal visit timing and seasonal considerations
+- Essential packing suggestions
+- Practical travel tips
+
+Format your response in a clear, structured way.\n\nAssistant:`,
           max_tokens_to_sample: 2000,
           temperature: 0.7,
           top_p: 0.9,
@@ -108,18 +115,6 @@ class JulietService {
       console.error('Error processing travel request:', error);
       throw error;
     }
-  }
-
-  private parseBookRecommendations(content: string): BookRecommendation[] {
-    // Implement parsing logic for book recommendations
-    // This is a placeholder implementation
-    return [];
-  }
-
-  private parseTravelRecommendations(content: string): TravelRecommendation[] {
-    // Implement parsing logic for travel recommendations
-    // This is a placeholder implementation
-    return [];
   }
 }
 

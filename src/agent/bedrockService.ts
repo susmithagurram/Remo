@@ -221,7 +221,7 @@ class BedrockService {
         if (txRequest) {
           const selectedWallet = walletService.getSelectedWallet();
           if (!selectedWallet) {
-            return "I notice you want to make a transaction, but you haven't selected a wallet yet. Please go to your profile, create a Remo wallet if you haven't already, and select it for use. Once you've done that, I'll be able to help you send transactions on Sepolia testnet.";
+            return "I apologize, but I need you to connect your wallet first to help you with transactions. Would you like me to guide you through that process?";
           }
 
           txRequest.from = selectedWallet.address;
@@ -246,7 +246,7 @@ class BedrockService {
         if (createTaskRequest) {
           const [_, taskTitle] = createTaskRequest;
           if (!this.userId) {
-            return "I need you to connect your wallet first to manage tasks.";
+            return "I apologize, but I need you to connect your wallet first to help manage your tasks. Would you like me to help you get set up?";
           }
 
           try {
@@ -254,7 +254,7 @@ class BedrockService {
             return `I've created a new task: "${task.title}"`;
           } catch (error) {
             console.error('Error creating task:', error);
-            return "I had trouble creating the task. Please try again later.";
+            return "I encountered a temporary issue processing your request through our specialized agents. I'm happy to help you directly or we can try your request again.";
           }
         }
 
@@ -265,7 +265,7 @@ class BedrockService {
         if (completeTaskRequest) {
           const [_, taskTitle] = completeTaskRequest;
           if (!this.userId) {
-            return "I need you to connect your wallet first to manage tasks.";
+            return "I couldn't find a task with that title. Would you like to see a list of your current tasks?";
           }
 
           try {
@@ -279,7 +279,7 @@ class BedrockService {
             return `I've marked the task "${task.title}" as completed!`;
           } catch (error) {
             console.error('Error completing task:', error);
-            return "I had trouble updating the task. Please try again later.";
+            return "I encountered a temporary issue processing your request through our specialized agents. I'm happy to help you directly or we can try your request again.";
           }
         }
 
@@ -312,23 +312,28 @@ class BedrockService {
             return response;
           } catch (error) {
             console.error('Error listing tasks:', error);
-            return "I had trouble retrieving your tasks. Please try again later.";
+            return "I encountered a temporary issue processing your request through our specialized agents. I'm happy to help you directly or we can try your request again.";
           }
         }
       }
 
       // For non-transaction messages, let's make Remo more helpful with wallet-related tasks
-      const prompt = `You are Remo, a personal AI assistant who can help with blockchain transactions and wallet management on the Sepolia testnet. You can help users send transactions, check balances, and manage their wallets. You should be proactive in helping users get test ETH when needed and guide them through the process of using the Sepolia testnet.
-
-Current conversation:
-${this.formatMessages(messages)}`;
-      
       const command = new InvokeModelCommand({
         modelId: 'anthropic.claude-v2',
         contentType: 'application/json',
         accept: 'application/json',
         body: JSON.stringify({
-          prompt: this.formatMessages(messages),
+          prompt: `\n\nHuman: You are Remo, an advanced personal AI assistant capable of handling multiple tasks including:
+- Book recommendations and literary guidance through specialized agents
+- Travel planning and destination advice
+- Blockchain transactions and wallet management on Sepolia testnet
+- Task and contact management
+- And more evolving capabilities
+
+Your mission is to make users' lives easier through seamless task management, informed recommendations, and efficient problem-solving. Be proactive, professional yet warm, and always prioritize user needs.
+
+Current conversation:
+${this.formatMessages(messages)}\n\nAssistant:`,
           max_tokens_to_sample: 2000,
           temperature: 0.7,
         }),
