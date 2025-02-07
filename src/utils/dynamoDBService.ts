@@ -8,11 +8,17 @@ import { Task } from '../agent/tasks/types';
 console.log('AWS Region:', import.meta.env.VITE_AWS_REGION);
 console.log('AWS Access Key ID exists:', !!import.meta.env.VITE_AWS_ACCESS_KEY_ID);
 
+const REGION = import.meta.env.VITE_AWS_REGION;
+const ACCESS_KEY = import.meta.env.VITE_AWS_ACCESS_KEY_ID;
+const SECRET_KEY = import.meta.env.VITE_AWS_SECRET_ACCESS_KEY;
+
+console.log('Initializing DynamoDB with region:', REGION);
+
 const client = new DynamoDBClient({
-  region: import.meta.env.VITE_AWS_REGION,
+  region: REGION,
   credentials: {
-    accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID as string,
-    secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY as string,
+    accessKeyId: ACCESS_KEY,
+    secretAccessKey: SECRET_KEY,
   },
 });
 
@@ -111,7 +117,6 @@ export const dynamoDBService = {
         Key: { userId },
       });
 
-      // Add retry logic for table being created
       let retries = 3;
       while (retries > 0) {
         try {
@@ -119,22 +124,24 @@ export const dynamoDBService = {
           console.log('DynamoDB response:', response);
           return response.Item as UserData || null;
         } catch (error: any) {
+          console.error('DynamoDB error:', {
+            error: error.message,
+            code: error.name,
+            statusCode: error.$metadata?.httpStatusCode
+          });
+          
           if (error.name === 'ResourceNotFoundException' && retries > 1) {
-            console.log('Table not ready yet, waiting...');
-            await wait(2000); // Wait 2 seconds before retrying
+            console.log('Table not ready, waiting and retrying...');
+            await new Promise(resolve => setTimeout(resolve, 2000));
             retries--;
-          } else {
-            throw error;
+            continue;
           }
+          throw error;
         }
       }
       return null;
-    } catch (error: any) {
-      console.error('Error fetching user data:', {
-        error: error.message,
-        name: error.name,
-        code: error.$metadata?.httpStatusCode
-      });
+    } catch (error) {
+      console.error('Error in getUserData:', error);
       throw error;
     }
   },

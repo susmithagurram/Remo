@@ -6,6 +6,7 @@ import { walletService } from './viem/walletService';
 import { contactsService } from './contacts/contactsService';
 import { dynamoDBService } from '../utils/dynamoDBService';
 import { tasksService } from './tasks/tasksService';
+import { agentOrchestrator } from './MultiAgentCollab/agentOrchestrator';
 
 class BedrockService {
   private client: BedrockRuntimeClient;
@@ -31,6 +32,23 @@ class BedrockService {
     try {
       const lastMessage = messages[messages.length - 1];
       console.log('Processing message:', lastMessage.content);
+
+      // Check if the query should be routed to Juliet
+      if (this.shouldRouteToJuliet(lastMessage.content)) {
+        try {
+          console.log('Routing to Juliet:', lastMessage.content);
+          const response = await agentOrchestrator.routeRequest(lastMessage.content);
+          console.log('Juliet response:', response);
+          return response.response;
+        } catch (error) {
+          console.error('Detailed Juliet routing error:', {
+            error,
+            stack: error instanceof Error ? error.stack : undefined,
+            message: error instanceof Error ? error.message : 'Unknown error'
+          });
+          return "I encountered an error processing your request through our specialized agents. Let me help you directly instead.";
+        }
+      }
 
       if (lastMessage.role === 'user') {
         // Check for send ETH to contact request
@@ -310,10 +328,9 @@ ${this.formatMessages(messages)}`;
         contentType: 'application/json',
         accept: 'application/json',
         body: JSON.stringify({
-          prompt: `\n\nHuman: ${prompt}\n\nAssistant:`,
+          prompt: this.formatMessages(messages),
           max_tokens_to_sample: 2000,
           temperature: 0.7,
-          top_p: 0.9,
         }),
       });
 
@@ -323,15 +340,32 @@ ${this.formatMessages(messages)}`;
       
       return parsedResponse.completion;
     } catch (error) {
-      console.error('Error in generateResponse:', error);
-      return "I encountered an error. Please try again.";
+      console.error('Detailed error in generateResponse:', {
+        error,
+        stack: error instanceof Error ? error.stack : undefined,
+        message: error instanceof Error ? error.message : 'Unknown error'
+      });
+      throw error;
     }
   }
 
   private formatMessages(messages: Message[]): string {
-    return messages
+    const formattedMessages = messages
       .map(msg => `${msg.role === 'user' ? 'Human' : 'Assistant'}: ${msg.content}`)
       .join('\n\n');
+    
+    return `${formattedMessages}\n\nAssistant:`;
+  }
+
+  private shouldRouteToJuliet(query: string): boolean {
+    const julietKeywords = [
+      'book', 'read', 'author', 'kindle', 'audible',
+      'travel', 'destination', 'trip', 'visit', 'explore'
+    ];
+    
+    return julietKeywords.some(keyword => 
+      query.toLowerCase().includes(keyword)
+    );
   }
 }
 

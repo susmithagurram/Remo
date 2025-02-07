@@ -56,15 +56,26 @@ const Profile = () => {
           setIsLoading(true);
           setError(null);
           try {
+            console.log('Initializing services for user:', userId);
+            
             // Initialize services with userId
             await walletService.initializeForUser(userId);
+            console.log('Wallet service initialized');
+            
             await contactsService.loadUserContacts(userId);
+            console.log('Contacts service initialized');
+            
             bedrockService.setUserId(userId);
+            console.log('Bedrock service initialized');
 
+            console.log('Fetching user data from DynamoDB');
             const userData = await dynamoDBService.getUserData(userId);
+            
             if (userData) {
+              console.log('User data found:', userData);
               setUsername(userData.username);
             } else {
+              console.log('No existing user data, creating default');
               const defaultUsername = getDefaultUsername();
               setUsername(defaultUsername);
               await dynamoDBService.updateUserData({
@@ -74,9 +85,13 @@ const Profile = () => {
                 updatedAt: Date.now(),
               });
             }
-          } catch (error) {
-            console.error('Error loading user data:', error);
-            setError('Failed to load user data. Please try again later.');
+          } catch (error: any) {
+            console.error('Detailed error loading user data:', {
+              error: error.message,
+              code: error.name,
+              stack: error.stack
+            });
+            setError(`Failed to load user data: ${error.message}`);
             setUsername(getDefaultUsername());
           } finally {
             setIsLoading(false);
