@@ -28,4 +28,10 @@ export interface RemoPersonality {
     language: string;
     formality: string;
   };
+  capabilities: {
+    current: string[];
+    upcoming: string[];
+  };
+  principles: string[];
+  mission: string;
 } 
