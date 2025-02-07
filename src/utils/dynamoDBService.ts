@@ -3,6 +3,7 @@ import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand, DeleteCom
 import { RemoWallet, Contact } from '../agent/viem/types';
 import { encryptPrivateKey, decryptPrivateKey } from './encryption';
 import { Task } from '../agent/tasks/types';
+import { ChatSession, ChatMessage } from '../agent/types';
 
 // Log environment variables (without sensitive data)
 console.log('AWS Region:', import.meta.env.VITE_AWS_REGION);
@@ -32,6 +33,8 @@ const USER_TABLE = 'remo_users';
 const WALLET_TABLE = 'remo_wallets';
 const CONTACTS_TABLE = 'remo_contacts';
 const TASKS_TABLE = 'remo_tasks';
+const CHAT_SESSIONS_TABLE = 'remo_chat_sessions';
+const CHAT_MESSAGES_TABLE = 'remo_chat_messages';
 
 export interface UserData {
   userId: string;  // This will be the wallet address or unique identifier
@@ -89,18 +92,22 @@ const ensureTable = async (tableName: string, keySchema: any) => {
     ]);
 
     await ensureTable(CONTACTS_TABLE, [
-      { 
-        AttributeName: 'userId', 
-        KeyType: 'HASH'
-      },
-      { 
-        AttributeName: 'contactId', 
-        KeyType: 'RANGE'
-      }
+      { AttributeName: 'userId', KeyType: 'HASH' },
+      { AttributeName: 'contactId', KeyType: 'RANGE' },
     ]);
 
     await ensureTable(TASKS_TABLE, [
       { AttributeName: 'userId', KeyType: 'HASH' },
+      { AttributeName: 'id', KeyType: 'RANGE' },
+    ]);
+
+    await ensureTable(CHAT_SESSIONS_TABLE, [
+      { AttributeName: 'userId', KeyType: 'HASH' },
+      { AttributeName: 'id', KeyType: 'RANGE' },
+    ]);
+
+    await ensureTable(CHAT_MESSAGES_TABLE, [
+      { AttributeName: 'sessionId', KeyType: 'HASH' },
       { AttributeName: 'id', KeyType: 'RANGE' },
     ]);
   } catch (error) {
@@ -433,6 +440,75 @@ export const dynamoDBService = {
       return true;
     } catch (error) {
       console.error('Error deleting task:', error);
+      throw error;
+    }
+  },
+
+  async getChatSessions(userId: string): Promise<ChatSession[]> {
+    try {
+      console.log('Fetching chat sessions for userId:', userId);
+      const command = new QueryCommand({
+        TableName: CHAT_SESSIONS_TABLE,
+        KeyConditionExpression: 'userId = :userId',
+        ExpressionAttributeValues: {
+          ':userId': userId,
+        },
+        ScanIndexForward: false, // Get most recent first
+      });
+
+      const response = await docClient.send(command);
+      return (response.Items || []) as ChatSession[];
+    } catch (error) {
+      console.error('Error fetching chat sessions:', error);
+      throw error;
+    }
+  },
+
+  async saveChatSession(session: ChatSession): Promise<boolean> {
+    try {
+      const command = new PutCommand({
+        TableName: CHAT_SESSIONS_TABLE,
+        Item: session,
+      });
+
+      await docClient.send(command);
+      return true;
+    } catch (error) {
+      console.error('Error saving chat session:', error);
+      throw error;
+    }
+  },
+
+  async getChatMessages(sessionId: string): Promise<ChatMessage[]> {
+    try {
+      const command = new QueryCommand({
+        TableName: CHAT_MESSAGES_TABLE,
+        KeyConditionExpression: 'sessionId = :sessionId',
+        ExpressionAttributeValues: {
+          ':sessionId': sessionId,
+        },
+        ScanIndexForward: true, // Get oldest first
+      });
+
+      const response = await docClient.send(command);
+      return (response.Items || []) as ChatMessage[];
+    } catch (error) {
+      console.error('Error fetching chat messages:', error);
+      throw error;
+    }
+  },
+
+  async saveChatMessage(message: ChatMessage): Promise<boolean> {
+    try {
+      const command = new PutCommand({
+        TableName: CHAT_MESSAGES_TABLE,
+        Item: message,
+      });
+
+      await docClient.send(command);
+      return true;
+    } catch (error) {
+      console.error('Error saving chat message:', error);
       throw error;
     }
   },

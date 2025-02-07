@@ -1,265 +1,264 @@
 .chatPage {
   display: flex;
   height: 100vh;
-  background: #FFFFFF;
-  color: #333;
+  background: #343541;
 }
 
-/* Left Side */
+/* Left Sidebar */
 .sidebar {
-  width: 300px;
-  min-width: 300px;
+  width: 260px;
+  min-width: 260px;
   height: 100vh;
-  background: #FFFFFF;
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 1rem;
+  background: #202123;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   position: fixed;
   left: 0;
   top: 0;
-  overflow-y: auto;
+  z-index: 10;
 }
 
-.logo {
-  font-size: 1.8rem;
-  font-weight: bold;
-  font-family: "Cinzel Decorative", cursive;
-  color: #000;
-  padding: 0.5rem 1rem;
-  margin-bottom: 0.5rem;
+.sidebarHeader {
+  padding: 8px;
 }
 
 .newChatButton {
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  padding: 0.8rem 1rem;
-  background: #000000;
-  border: none;
-  border-radius: 8px;
+  gap: 12px;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
   color: #FFFFFF;
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
-  width: 100%;
-  margin-bottom: 1rem;
 }
 
 .newChatButton:hover {
-  background: #333333;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .chatHistory {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
   flex: 1;
   overflow-y: auto;
-  padding: 0.5rem;
+  padding: 8px;
 }
 
 .chatItem {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  padding: 0.8rem 1rem;
-  border-radius: 8px;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: #333;
-  font-size: 0.9rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
 }
 
 .chatItem:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-.chatItem.active {
-  background: rgba(0, 0, 0, 0.08);
-  font-weight: 500;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .chatIcon {
-  font-size: 1.2rem;
-  opacity: 0.7;
+  color: rgba(255, 255, 255, 0.8);
+  width: 16px;
+  height: 16px;
 }
 
-.chatTitle {
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.userSection {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+  z-index: 20;
 }
 
-.sidebarFooter {
-  padding: 1rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  margin-top: auto;
-}
-
-.profileMenu {
-  position: relative;
-}
-
-.profileButton {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 0.6rem 1rem;
+.userButton {
   background: transparent;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  color: #333;
-  font-size: 0.95rem;
-  font-weight: 500;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.profileButton:hover {
-  background: rgba(0, 0, 0, 0.05);
+.userButton:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.profileDropdown {
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+}
+
+.userDropdown {
   position: absolute;
+  top: 100%;
   right: 0;
-  top: calc(100% + 0.5rem);
-  background: #FFFFFF;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  margin-top: 8px;
+  background: #202123;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
   overflow: hidden;
-  z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  min-width: 150px;
+  min-width: 200px;
 }
 
-.profileOption {
+.dropdownItem {
   width: 100%;
-  padding: 0.8rem 1rem;
+  padding: 12px;
   background: transparent;
   border: none;
-  color: #333;
-  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
   text-align: left;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.profileOption:hover {
-  background: rgba(0, 0, 0, 0.05);
+.dropdownItem:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Main Chat Area */
 .mainChat {
   flex: 1;
+  margin-left: 260px;
   display: flex;
   flex-direction: column;
-  background: #FFFFFF;
+  height: 100vh;
   position: relative;
-  margin-left: 300px;
+  background: #343541;
 }
 
-.welcomeMessage {
-  text-align: center;
-  padding: 2rem;
-  font-size: 2rem;
+.welcomeContainer {
+  position: absolute;
+  left: 50%;
+  top: 35%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  pointer-events: none;
+}
+
+.welcomeTitle {
+  color: #FFFFFF;
+  font-size: 32px;
   font-weight: 600;
-  color: #333;
-  font-family: "Cinzel Decorative", cursive;
-  opacity: 0;
-  animation: fadeIn 0.5s ease forwards;
-  animation-delay: 0.2s;
+  text-align: center;
+  max-width: 600px;
+  opacity: 0.8;
+  margin-bottom: 2rem;
 }
 
-/* Rest of the existing chat styles */
 .messagesContainer {
   flex: 1;
-  padding: 2rem;
-  padding-bottom: calc(2rem + 80px);
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  scroll-behavior: smooth;
+  padding-bottom: 120px;
+  width: 100%;
 }
 
-.message {
-  max-width: 80%;
-  padding: 1rem;
-  border-radius: 12px;
-  animation: fadeIn 0.3s ease;
+.messageWrapper {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  background: transparent;
 }
 
-.message.user {
-  background: #000000;
-  color: #FFFFFF;
-  margin-left: auto;
-  border-bottom-right-radius: 4px;
-}
-
-.message.assistant {
-  background: #F0F0F0;
-  color: #333;
-  margin-right: auto;
-  border-bottom-left-radius: 4px;
-}
-
-.message.error {
-  background: rgba(255, 59, 48, 0.1);
-  margin: 0 auto;
-  text-align: center;
-  color: #ff3b30;
-  font-size: 0.9rem;
-  max-width: 60%;
+.messageWrapper.assistant {
+  background: rgba(68, 70, 84, 1);
 }
 
 .messageContent {
-  font-size: 0.95rem;
-  line-height: 1.5;
-  white-space: pre-wrap;
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  gap: 24px;
 }
 
-.messageTime {
-  font-size: 0.75rem;
-  color: rgba(0, 0, 0, 0.5);
-  margin-top: 0.5rem;
-  text-align: right;
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.user .avatar {
+  background: #FFFFFF;
+  color: #000000;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.assistant .avatar {
+  background: #00B3B3;  /* Blue-green color for Remo */
+  color: #FFFFFF;
+}
+
+.message {
+  color: #ECECF1;
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+  padding-right: 12px;
 }
 
 .inputForm {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  left: calc(300px + 2rem);
-  max-width: 1200px;
-  margin: 0 auto;
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  transform: translate(-50%, -50%);
+  width: calc(100% - 280px);
+  max-width: 48rem;
+  padding: 24px;
+  background: transparent;
+  z-index: 1;
+}
+
+.inputWrapper {
+  width: 100%;
+  background: #40414F;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 10px;
   display: flex;
-  align-items: center;
-  background: #FFFFFF;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 24px;
-  padding: 0.25rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  align-items: flex-end;
+  gap: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* When there are messages, move the input to bottom */
+.messagesContainer:not(:empty) ~ .inputForm {
+  position: fixed;
+  bottom: 0;
+  top: auto;
+  transform: translateX(-50%);
+  background: #343541;
 }
 
 .input {
   flex: 1;
   background: transparent;
   border: none;
-  padding: 0.75rem 1rem;
-  color: #333;
-  font-size: 1rem;
+  padding: 8px;
+  color: #FFFFFF;
+  font-size: 16px;
+  line-height: 1.5;
+  max-height: 200px;
   resize: none;
   font-family: inherit;
-  max-height: 200px;
-  min-height: 24px;
-  transition: all 0.2s ease;
 }
 
 .input:focus {
@@ -267,26 +266,23 @@
 }
 
 .input::placeholder {
-  color: rgba(0, 0, 0, 0.4);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .sendButton {
-  padding: 0.5rem 1rem;
-  background: #000000;
+  background: transparent;
   border: none;
-  border-radius: 20px;
-  color: #FFFFFF;
-  font-size: 1rem;
+  padding: 8px;
+  color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
-  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 0.25rem;
+  transition: all 0.2s ease;
 }
 
-.sendButton:hover {
-  background: #333333;
+.sendButton:hover:not(:disabled) {
+  color: #FFFFFF;
 }
 
 .sendButton:disabled {
@@ -296,17 +292,16 @@
 
 .loadingDots {
   display: flex;
-  gap: 0.3rem;
-  padding: 0.5rem;
-  justify-content: center;
+  gap: 4px;
+  padding: 8px 0;
 }
 
 .loadingDots span {
-  width: 8px;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.5);
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.7);
   border-radius: 50%;
-  animation: bounce 1.4s infinite ease-in-out;
+  animation: bounce 1.4s infinite ease-in-out both;
 }
 
 .loadingDots span:nth-child(1) {
@@ -315,17 +310,6 @@
 
 .loadingDots span:nth-child(2) {
   animation-delay: -0.16s;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 @keyframes bounce {
@@ -337,14 +321,7 @@
   }
 }
 
-.topNav {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 1rem 2rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  background: #FFFFFF;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+/* Hide welcome message when there are messages */
+.messagesContainer:not(:empty) ~ .welcomeContainer {
+  display: none;
 } 

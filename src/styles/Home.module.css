@@ -1,7 +1,7 @@
 .home {
   min-height: 100vh;
   position: relative;
-  color: #000;
+  color: #FFFFFF;
   overflow-x: hidden;
   scroll-behavior: smooth;
   
@@ -12,7 +12,7 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    background: #FFFFFF;
+    background: #000000;
     z-index: -1;
   }
 
@@ -35,12 +35,12 @@
     left: 0;
     right: 0;
     z-index: 100;
-    background: #FFFFFF;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    background: #000000;
+    box-shadow: 0 1px 2px rgba(255, 255, 255, 0.1);
     transition: background 0.3s ease;
 
     &:hover {
-      background: #FFFFFF;
+      background: #000000;
     }
     
     .navLeft {
@@ -53,7 +53,7 @@
       font-size: 2rem;
       font-weight: bold;
       font-family: "Cinzel Decorative", cursive;
-      color: #000;
+      color: #FFFFFF;
     }
 
     .navLinks {
@@ -66,7 +66,7 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      color: rgba(0, 0, 0, 0.8);
+      color: rgba(255, 255, 255, 0.8);
       font-size: 1rem;
       font-weight: 400;
       cursor: pointer;
@@ -77,8 +77,8 @@
       user-select: none;
 
       &:hover {
-        color: #000;
-        background: rgba(0, 0, 0, 0.05);
+        color: #FFFFFF;
+        background: rgba(255, 255, 255, 0.1);
       }
 
       &:active {
@@ -105,7 +105,7 @@
       z-index: 11;
       background: transparent;
       border: none;
-      color: rgba(0, 0, 0, 0.8);
+      color: rgba(255, 255, 255, 0.8);
       cursor: pointer;
       outline: none;
       padding: 8px;
@@ -118,8 +118,8 @@
       height: 48px;
       
       &:hover {
-        color: #000;
-        background: rgba(0, 0, 0, 0.05);
+        color: #FFFFFF;
+        background: rgba(255, 255, 255, 0.1);
       }
 
       &:active {
@@ -153,11 +153,12 @@
       display: block;
       margin-bottom: 0.5rem;
       opacity: 0.9;
+      color: #FFFFFF;
 
       &:last-of-type {
         font-size: 1.25rem;
         margin-top: 0.25rem;
-        color: rgba(156, 163, 175, 0.9);
+        color: rgba(255, 255, 255, 0.7);
         max-width: 600px;
         line-height: 1.5;
       }
@@ -169,6 +170,7 @@
       font-weight: bold;
       letter-spacing: 2px;
       display: inline-block;
+      color: #FFFFFF;
     }
 
     .remo {
@@ -178,13 +180,14 @@
       letter-spacing: 2px;
       display: inline-block;
       animation: pulse 2s infinite;
+      color: #FFFFFF;
     }
 
     .createButton {
       padding: 0.8rem 1.5rem;
       border: none;
       border-radius: 50px;
-      background: #000000;
+      background: rgba(255, 255, 255, 0.1);
       color: #FFFFFF;
       font-size: 1rem;
       font-weight: 500;
@@ -210,7 +213,7 @@
       &:hover {
         transform: translateY(-3px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        background: #333333;
+        background: rgba(255, 255, 255, 0.2);
       }
 
       &:active {
@@ -236,7 +239,7 @@
     position: relative;
     z-index: 2;
     scroll-margin-top: 5rem;
-    background: #FFFFFF;
+    background: #000000;
     
     &::before {
       content: '';
@@ -245,7 +248,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: #FFFFFF;
+      background: #000000;
       z-index: -1;
     }
     
@@ -311,7 +314,7 @@
     text-align: center;
     position: relative;
     z-index: 2;
-    background: #FFFFFF;
+    background: #000000;
     
     &::before {
       content: '';
@@ -320,7 +323,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: #FFFFFF;
+      background: #000000;
       z-index: -1;
     }
     
@@ -340,7 +343,7 @@
         animation: fadeInUp 0.8s ease forwards;
         animation-delay: 0.3s;
         letter-spacing: 1px;
-        color: #333;
+        color: #FFFFFF;
       }
 
       .trusted-logos {
@@ -363,13 +366,13 @@
           .company-name {
             font-size: 3.5rem;
             font-weight: 500;
-            color: #333;
+            color: #FFFFFF;
             font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
             transition: all 0.3s ease;
             display: inline-block;
             
             &:hover {
-              color: #000;
+              color: rgba(255, 255, 255, 0.8);
               transform: translateY(-2px);
             }
           }
@@ -388,7 +391,7 @@
     position: relative;
     z-index: 2;
     scroll-margin-top: 5rem;
-    background: #FFFFFF;
+    background: #000000;
     margin-bottom: 4rem;
     
     &::before {
@@ -403,7 +406,7 @@
       left: 0;
       width: 100%;
       height: 4rem;
-      background: #FFFFFF;
+      background: #000000;
     }
     
     .features-content {
@@ -422,7 +425,7 @@
         animation: fadeInUp 0.8s ease forwards;
         animation-delay: 0.3s;
         letter-spacing: 2px;
-        color: #333;
+        color: #FFFFFF;
       }
 
       .features-grid {
@@ -432,7 +435,7 @@
         padding: 0 2rem;
         
         .feature-block {
-          background: #FFFFFF;
+          background: rgba(255, 255, 255, 0.05);
           border-radius: 24px;
           padding: 2.5rem 2rem;
           position: relative;
@@ -440,30 +443,8 @@
           transform: translateY(20px);
           animation: fadeInUp 0.8s ease forwards;
           transition: all 0.3s ease;
-          border: 1px solid rgba(0, 0, 0, 0.1);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-          
-          &::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 24px;
-            padding: 1px;
-            background: linear-gradient(
-              45deg,
-              rgba(255, 255, 255, 0.1),
-              rgba(255, 255, 255, 0.05)
-            );
-            -webkit-mask: 
-              linear-gradient(#fff 0 0) content-box, 
-              linear-gradient(#fff 0 0);
-            mask: 
-              linear-gradient(#fff 0 0) content-box, 
-              linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-          }
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
           
           &:nth-child(1) { animation-delay: 0.5s; }
           &:nth-child(2) { animation-delay: 0.7s; }
@@ -471,8 +452,8 @@
 
           &:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            background: #FFFFFF;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
           }
 
           .feature-icon {
@@ -492,7 +473,7 @@
           .feature-title {
             font-size: 1.8rem;
             font-weight: 600;
-            color: #333;
+            color: #FFFFFF;
             font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
             letter-spacing: 0.5px;
             margin-bottom: 1rem;
@@ -501,7 +482,7 @@
           .feature-description {
             font-size: 1rem;
             line-height: 1.6;
-            color: #666;
+            color: rgba(255, 255, 255, 0.7);
             font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
             margin: 0;
           }
@@ -521,7 +502,7 @@
     position: relative;
     z-index: 2;
     padding-bottom: 5rem;
-    background: #FFFFFF;
+    background: #000000;
     
     &::before {
       content: '';
@@ -530,7 +511,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: #FFFFFF;
+      background: #000000;
       z-index: -1;
     }
 
@@ -541,7 +522,7 @@
       left: 0;
       width: 100%;
       height: 5rem;
-      background: #FFFFFF;
+      background: #000000;
     }
     
     .services-content {
@@ -561,7 +542,7 @@
         animation: fadeInUp 0.8s ease forwards;
         animation-delay: 0.3s;
         letter-spacing: 2px;
-        color: #333;
+        color: #FFFFFF;
       }
 
       .services-grid {
@@ -571,7 +552,7 @@
         margin-bottom: 3rem;
         
         .service-block {
-          background: #FFFFFF;
+          background: rgba(255, 255, 255, 0.05);
           border-radius: 24px;
           padding: 2.5rem 2rem;
           position: relative;
@@ -579,30 +560,8 @@
           transform: translateY(20px);
           animation: fadeInUp 0.8s ease forwards;
           transition: all 0.3s ease;
-          border: 1px solid rgba(0, 0, 0, 0.1);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-          
-          &::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 24px;
-            padding: 1px;
-            background: linear-gradient(
-              45deg,
-              rgba(255, 255, 255, 0.1),
-              rgba(255, 255, 255, 0.05)
-            );
-            -webkit-mask: 
-              linear-gradient(#fff 0 0) content-box, 
-              linear-gradient(#fff 0 0);
-            mask: 
-              linear-gradient(#fff 0 0) content-box, 
-              linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-          }
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
           
           &:nth-child(1) { animation-delay: 0.3s; }
           &:nth-child(2) { animation-delay: 0.4s; }
@@ -612,8 +571,8 @@
 
           &:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            background: #FFFFFF;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
           }
 
           .service-icon {
@@ -641,7 +600,7 @@
           .service-title {
             font-size: 1.6rem;
             font-weight: 600;
-            color: #333;
+            color: #FFFFFF;
             font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
             letter-spacing: 0.5px;
             margin-bottom: 1rem;
@@ -650,7 +609,7 @@
           .service-description {
             font-size: 1rem;
             line-height: 1.6;
-            color: #666;
+            color: rgba(255, 255, 255, 0.7);
             font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
             margin: 0;
           }
@@ -687,12 +646,12 @@
   }
 
   .footer {
-    background: #FFFFFF;
+    background: #000000;
     padding: 4rem 0 2rem;
-    color: #333;
+    color: #FFFFFF;
     position: relative;
     z-index: 2;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 
     .footerContent {
       max-width: 1200px;
@@ -709,7 +668,7 @@
       .followText {
         font-size: 1rem;
         font-weight: 500;
-        color: #333;
+        color: #FFFFFF;
       }
 
       .socialIcons {
@@ -717,11 +676,11 @@
         gap: 1.5rem;
         
         .socialIcon {
-          color: #666;
+          color: rgba(255, 255, 255, 0.7);
           transition: color 0.2s ease;
 
           &:hover {
-            color: #333;
+            color: #FFFFFF;
           }
         }
       }
@@ -729,7 +688,7 @@
 
     .footerDivider {
       height: 1px;
-      background: rgba(0, 0, 0, 0.1);
+      background: rgba(255, 255, 255, 0.1);
       margin: 0 0 3rem;
     }
 
@@ -743,7 +702,7 @@
           font-size: 1.2rem;
           font-weight: 500;
           margin-bottom: 2rem;
-          color: #333;
+          color: #FFFFFF;
         }
 
         ul {
@@ -755,13 +714,13 @@
           gap: 1rem;
 
           li a {
-            color: #666;
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             font-size: 1rem;
             transition: color 0.2s ease;
 
             &:hover {
-              color: #333;
+              color: #FFFFFF;
             }
           }
         }
@@ -841,7 +800,7 @@
     }
 
     .bottomLinks {
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
       margin-top: 4rem;
       padding-top: 2rem;
 
@@ -854,7 +813,7 @@
         align-items: center;
 
         .logo {
-          color: #333;
+          color: #FFFFFF;
           text-decoration: none;
           font-size: 1.2rem;
           font-weight: 500;
@@ -865,13 +824,13 @@
           gap: 2rem;
 
           a {
-            color: #666;
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             font-size: 0.9rem;
             transition: color 0.2s ease;
 
             &:hover {
-              color: #333;
+              color: #FFFFFF;
             }
           }
         }

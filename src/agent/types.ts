@@ -28,4 +28,22 @@ export interface RemoPersonality {
     language: string;
     formality: string;
   };
+}
+
+export interface ChatMessage {
+  id: string;
+  sessionId: string;
+  userId: string;
+  content: string;
+  role: 'user' | 'assistant';
+  timestamp: number;
+}
+
+export interface ChatSession {
+  id: string;
+  userId: string;
+  title: string;
+  lastMessage: string;
+  createdAt: number;
+  updatedAt: number;
 } 

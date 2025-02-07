@@ -19,6 +19,8 @@ const Chat: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate();
 
   // Add new state for chat history
@@ -30,7 +32,6 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      // Get the connected wallet address
       const walletAccount = user.linkedAccounts?.find(account => account.type === 'wallet');
       if (walletAccount?.address) {
         console.log('Setting userId from connected wallet:', walletAccount.address);
@@ -41,6 +42,25 @@ const Chat: React.FC = () => {
     }
   }, [user]);
 
+  // Handle click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current && 
+        buttonRef.current && 
+        !dropdownRef.current.contains(event.target as Node) &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -48,16 +68,6 @@ const Chat: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  const handleLocalDeploy = () => {
-    console.log('Deploying locally...');
-    // Implementation will be added later
-  };
-
-  const handleAutonomeDeploy = () => {
-    console.log('Deploying to Autonome...');
-    // Implementation will be added later
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,17 +104,14 @@ const Chat: React.FC = () => {
     }
   };
 
-  // Get user's name (email or wallet address)
   const getUserName = () => {
     if (!user) return 'Guest';
     
-    // Check for connected wallets
     const walletAccount = user.linkedAccounts?.find(account => account.type === 'wallet');
     if (walletAccount) {
       return `${walletAccount.address.slice(0, 6)}...${walletAccount.address.slice(-4)}`;
     }
     
-    // Fallback to email if available
     if (user.email) return user.email.toString().split('@')[0];
     
     return 'Guest';
@@ -114,46 +121,55 @@ const Chat: React.FC = () => {
     <div className={styles.chatPage}>
       {/* Left Sidebar */}
       <div className={styles.sidebar}>
-        <div className={styles.logo}>REMO</div>
-        
-        {/* New Chat Button */}
-        <button className={styles.newChatButton}>
-          <svg 
-            width="16" 
-            height="16" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2"
-            strokeLinecap="round" 
-            strokeLinejoin="round"
-          >
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          New Chat
-        </button>
+        <div className={styles.sidebarHeader}>
+          <button className={styles.newChatButton}>
+            <svg 
+              width="16" 
+              height="16" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2"
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            >
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            New chat
+          </button>
+        </div>
 
         {/* Chat History */}
         <div className={styles.chatHistory}>
           {chatHistory.map((chat) => (
             <div key={chat.id} className={styles.chatItem}>
-              <span className={styles.chatIcon}>💬</span>
+              <svg 
+                width="16" 
+                height="16" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2"
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+                className={styles.chatIcon}
+              >
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
               <span className={styles.chatTitle}>{chat.title}</span>
             </div>
           ))}
         </div>
-      </div>
 
-      {/* Main Chat Area */}
-      <div className={styles.mainChat}>
-        {/* Top Navigation with Profile */}
-        <div className={styles.topNav}>
-          <div className={styles.profileMenu}>
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className={styles.profileButton}
-            >
+        {/* User Profile */}
+        <div className={styles.userSection}>
+          <button
+            ref={buttonRef}
+            onClick={() => setIsOpen(!isOpen)}
+            className={styles.userButton}
+          >
+            <div className={styles.userInfo}>
               <svg 
                 width="16" 
                 height="16" 
@@ -168,101 +184,122 @@ const Chat: React.FC = () => {
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
               {getUserName()}
-            </button>
-            {isOpen && (
-              <div className={styles.profileDropdown}>
-                <button
-                  onClick={() => {
-                    navigate('/profile');
-                    setIsOpen(false);
-                  }}
-                  className={styles.profileOption}
-                >
-                  Profile
-                </button>
-                <button
-                  onClick={async () => {
-                    await logout();
-                    navigate('/');
-                    setIsOpen(false);
-                  }}
-                  className={styles.profileOption}
-                >
-                  Logout
-                </button>
+            </div>
+          </button>
+          {isOpen && (
+            <div ref={dropdownRef} className={styles.userDropdown}>
+              <button
+                onClick={() => {
+                  navigate('/profile');
+                  setIsOpen(false);
+                }}
+                className={styles.dropdownItem}
+              >
+                Profile
+              </button>
+              <button
+                onClick={async () => {
+                  await logout();
+                  navigate('/');
+                  setIsOpen(false);
+                }}
+                className={styles.dropdownItem}
+              >
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Main Chat Area */}
+      <div className={styles.mainChat}>
+        {messages.length === 0 ? (
+          <div className={styles.welcomeContainer}>
+            <h1 className={styles.welcomeTitle}>Hello, I am Remo how can I help you?</h1>
+          </div>
+        ) : (
+          <div className={styles.messagesContainer}>
+            {messages.map(message => (
+              <div
+                key={message.id}
+                className={`${styles.messageWrapper} ${
+                  message.role === 'assistant' ? styles.assistant : styles.user
+                }`}
+              >
+                <div className={styles.messageContent}>
+                  <div className={styles.avatar}>
+                    {message.role === 'assistant' ? 'R' : 'U'}
+                  </div>
+                  <div className={styles.message}>
+                    {message.content}
+                  </div>
+                </div>
+              </div>
+            ))}
+            {isLoading && (
+              <div className={`${styles.messageWrapper} ${styles.assistant}`}>
+                <div className={styles.messageContent}>
+                  <div className={styles.avatar}>R</div>
+                  <div className={styles.message}>
+                    <div className={styles.loadingDots}>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
+            {error && (
+              <div className={`${styles.messageWrapper} ${styles.error}`}>
+                <div className={styles.messageContent}>
+                  <div className={styles.avatar}>R</div>
+                  <div className={styles.message}>
+                    {error}
+                  </div>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
           </div>
-        </div>
-
-        <div className={styles.welcomeMessage}>
-          Hello, {getUserName()}
-        </div>
-
-        <div className={styles.messagesContainer}>
-          {messages.map(message => (
-            <div
-              key={message.id}
-              className={`${styles.message} ${
-                message.role === 'assistant' ? styles.assistant : styles.user
-              }`}
-            >
-              <div className={styles.messageContent}>{message.content}</div>
-              <div className={styles.messageTime}>
-                {new Date(message.timestamp).toLocaleTimeString()}
-              </div>
-            </div>
-          ))}
-          {isLoading && (
-            <div className={`${styles.message} ${styles.assistant}`}>
-              <div className={styles.loadingDots}>
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </div>
-          )}
-          {error && (
-            <div className={`${styles.message} ${styles.error}`}>
-              {error}
-            </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
+        )}
 
         <form onSubmit={handleSubmit} className={styles.inputForm}>
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Message Remo..."
-            className={styles.input}
-            rows={1}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSubmit(e);
-              }
-            }}
-          />
-          <button 
-            type="submit" 
-            className={styles.sendButton} 
-            disabled={!input.trim() || isLoading}
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          <div className={styles.inputWrapper}>
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Message Remo..."
+              className={styles.input}
+              rows={1}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit(e);
+                }
+              }}
+            />
+            <button 
+              type="submit" 
+              className={styles.sendButton} 
+              disabled={!input.trim() || isLoading}
             >
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-          </button>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+          </div>
         </form>
       </div>
     </div>
