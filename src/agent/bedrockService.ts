@@ -31,6 +31,14 @@ class BedrockService {
   async generateResponse(messages: Message[]): Promise<string> {
     try {
       const lastMessage = messages[messages.length - 1];
+      
+      // Check for task-related commands first
+      if (lastMessage.content.toLowerCase().includes('task') || 
+          lastMessage.content.toLowerCase().includes('to do')) {
+        const taskResponse = await this.handleTaskCommand(lastMessage.content);
+        if (taskResponse) return taskResponse;
+      }
+
       console.log('Processing message:', lastMessage.content);
 
       // Check if the query should be routed to Juliet
@@ -345,11 +353,7 @@ ${this.formatMessages(messages)}\n\nAssistant:`,
       
       return parsedResponse.completion;
     } catch (error) {
-      console.error('Detailed error in generateResponse:', {
-        error,
-        stack: error instanceof Error ? error.stack : undefined,
-        message: error instanceof Error ? error.message : 'Unknown error'
-      });
+      console.error('Error generating response:', error);
       throw error;
     }
   }
@@ -371,6 +375,48 @@ ${this.formatMessages(messages)}\n\nAssistant:`,
     return julietKeywords.some(keyword => 
       query.toLowerCase().includes(keyword)
     );
+  }
+
+  private async handleTaskCommand(text: string): Promise<string> {
+    if (!this.userId) {
+      return "Please connect your wallet first to manage tasks.";
+    }
+
+    // Show tasks command
+    if (text.match(/show\s+(all\s+)?tasks|show\s+to\s*do'?s|list\s+tasks/i)) {
+      try {
+        const tasks = await tasksService.listTasks(this.userId);
+        
+        if (tasks.length === 0) {
+          return "You don't have any tasks yet. Would you like to create one? Just say something like 'add task: buy groceries'";
+        }
+
+        const pendingTasks = tasks.filter(t => t.status === 'pending');
+        const completedTasks = tasks.filter(t => t.status === 'completed');
+
+        let response = "Here are your tasks:\n\n";
+        
+        if (pendingTasks.length > 0) {
+          response += "📝 Pending Tasks:\n" + 
+            pendingTasks.map((t, i) => `${i + 1}. ${t.title}`).join('\n') + '\n\n';
+        }
+        
+        if (completedTasks.length > 0) {
+          response += "✅ Completed Tasks:\n" + 
+            completedTasks.map((t, i) => `${i + 1}. ${t.title}`).join('\n');
+        }
+
+        response += "\n\nYou can add new tasks by saying 'add task: [task description]' or mark tasks as complete by saying 'complete task [number]'.";
+        
+        return response;
+      } catch (error) {
+        console.error('Error listing tasks:', error);
+        return "I encountered an error retrieving your tasks. Please try again.";
+      }
+    }
+
+    // Add this return statement at the end
+    return "I can help you manage tasks. Try saying 'show tasks', 'add task: [description]', or 'complete task [number]'.";
   }
 }
 

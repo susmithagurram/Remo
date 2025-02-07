@@ -837,6 +837,30 @@
       }
     }
   }
+
+  .integrationStatus {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    margin-top: 2rem;
+  }
+
+  /* Update TelegramStatus component styles to match the dark theme */
+  .integrationStatus :global(.telegram-status) {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+  }
+
+  .integrationStatus :global(.telegram-status h2) {
+    color: #fff !important;
+  }
+
+  .integrationStatus :global(.telegram-status p) {
+    color: rgba(255, 255, 255, 0.8) !important;
+  }
 }
 
 @keyframes pixelReveal {

@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import path from 'path';
 import type { IncomingMessage } from 'http';
 
@@ -8,7 +9,16 @@ interface ExtendedIncomingMessage extends IncomingMessage {
 }
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    nodePolyfills({
+      include: ['buffer', 'stream', 'util', 'process'],
+      globals: {
+        Buffer: true,
+        process: true,
+      },
+    }),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -23,21 +33,13 @@ export default defineConfig({
   server: {
     port: 8585,
     proxy: {
-      '/api/eth': {
-        target: process.env.VITE_RPC_URL,
+      '/api': {
+        target: 'https://api.telegram.org',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/eth/, ''),
-        configure: (proxy, _options) => {
-          proxy.on('error', (err, _req, _res) => {
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        configure: (proxy) => {
+          proxy.on('error', (err) => {
             console.log('proxy error', err);
-          });
-          proxy.on('proxyReq', (proxyReq, req: ExtendedIncomingMessage, _res) => {
-            if (req.body) {
-              const bodyData = JSON.stringify(req.body);
-              proxyReq.setHeader('Content-Type', 'application/json');
-              proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-              proxyReq.write(bodyData);
-            }
           });
         },
       },

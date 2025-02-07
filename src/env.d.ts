@@ -6,6 +6,7 @@ interface ImportMetaEnv {
   readonly VITE_AWS_SECRET_ACCESS_KEY: string
   readonly VITE_AWS_REGION: string
   readonly VITE_ENCRYPTION_KEY: string
+  readonly VITE_TELEGRAM_BOT_TOKEN: string
 }
 
 interface ImportMeta {
