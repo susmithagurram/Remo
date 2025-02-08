@@ -2,7 +2,6 @@ import { usePrivy } from '@privy-io/react-auth';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
-import TelegramStatus from '../components/TelegramStatus';
 
 const Home = () => {
   const { authenticated } = usePrivy();
@@ -237,10 +236,6 @@ const Home = () => {
               <p className={styles.featureDescription}>Smart recommendations to enhance productivity</p>
             </div>
           </div>
-        </div>
-
-        <div className={styles.integrationStatus}>
-          <TelegramStatus />
         </div>
       </div>
 
