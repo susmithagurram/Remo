@@ -142,133 +142,141 @@ const Profile = () => {
   return (
     <div className={styles.profilePage}>
       <div className={styles.profileContainer}>
-        <div className={styles.profileHeader}>
-          <div className={styles.avatarSection}>
-            <div className={styles.avatar}>
-              {username.charAt(0).toUpperCase()}
-            </div>
-            <h1>My Profile</h1>
-          </div>
-        </div>
-        
-        <div className={styles.profileCard}>
-          <h2>🎯 Basic Information</h2>
-          {error && (
-            <div className={styles.errorMessage}>
-              {error}
-            </div>
-          )}
-          <div className={styles.infoGrid}>
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>👤 Username</span>
-              <div className={styles.infoValue}>
-                {isEditingUsername ? (
-                  <div className={styles.usernameEdit}>
-                    <input
-                      type="text"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      className={styles.usernameInput}
-                      autoFocus
-                      disabled={isSaving}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && !isSaving) {
-                          handleUsernameSubmit();
-                        }
-                      }}
-                    />
-                    <button
-                      onClick={handleUsernameSubmit}
-                      className={styles.saveButton}
-                      disabled={isSaving}
-                    >
-                      {isSaving ? 'Saving...' : 'Save'}
-                    </button>
+        {/* Left Sidebar */}
+        <div className={styles.profileSidebar}>
+          <div className={styles.profileHeader}>
+            <div className={styles.avatarSection}>
+              <div className={styles.avatar}>
+                {username.charAt(0).toUpperCase()}
+              </div>
+              {isEditingUsername ? (
+                <div className={styles.usernameEdit}>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className={styles.usernameInput}
+                    autoFocus
+                    disabled={isSaving}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !isSaving) {
+                        handleUsernameSubmit();
+                      }
+                    }}
+                  />
+                  <button
+                    onClick={handleUsernameSubmit}
+                    className={styles.saveButton}
+                    disabled={isSaving}
+                  >
+                    {isSaving ? 'Saving...' : 'Save'}
+                  </button>
+                </div>
+              ) : (
+                <div className={styles.usernameDisplay}>
+                  <h1>{username}</h1>
+                  <button
+                    onClick={() => setIsEditingUsername(true)}
+                    className={styles.editButton}
+                    disabled={isSaving}
+                  >
+                    ✏️
+                  </button>
+                </div>
+              )}
+
+              {/* User Details */}
+              <div className={styles.userDetails}>
+                {error && (
+                  <div className={styles.errorMessage}>
+                    {error}
                   </div>
-                ) : (
-                  <div className={styles.usernameDisplay}>
-                    <span>{username}</span>
-                    <button
-                      onClick={() => setIsEditingUsername(true)}
-                      className={styles.editButton}
-                      disabled={isSaving}
-                    >
-                      ✏️
-                    </button>
+                )}
+                {user.email?.address && (
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailText}>{user.email.address}</span>
+                  </div>
+                )}
+                {user.twitter?.username && (
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailIcon}>🐦</span>
+                    <span className={styles.detailText}>@{user.twitter.username}</span>
                   </div>
                 )}
               </div>
             </div>
-            {user.twitter?.username && (
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>🐦 Twitter</span>
-                <span className={styles.infoValue}>@{user.twitter.username}</span>
-              </div>
-            )}
           </div>
         </div>
 
-        <RemoWallets onWalletSelect={handleWalletSelect} />
-
-        {userId && <Contacts userId={userId} />}
-
-        <div className={styles.profileCard}>
-          <h2>🔗 Connected Accounts</h2>
-          <div className={styles.accountsList}>
-            {connectedAccounts.map((account, index) => (
-              <div key={index} className={styles.accountItem}>
-                <div className={styles.accountInfo}>
-                  <span className={styles.accountIcon}>
-                    {account.type === 'wallet' && '👛'}
-                    {account.type === 'email' && '📧'}
-                    {account.type === 'twitter_oauth' && '🐦'}
-                  </span>
-                  <div className={styles.accountDetails}>
-                    <span className={styles.accountName}>
-                      {account.type === 'wallet' && `${account.address.slice(0, 6)}...${account.address.slice(-4)}`}
-                      {account.type === 'email' && account.address}
-                      {account.type === 'twitter_oauth' && `@${user.twitter?.username}`}
+        {/* Main Content Area */}
+        <div className={styles.mainContent}>
+          {/* Connected Accounts Section */}
+          <div className={styles.profileCard}>
+            <h2>🔗 Connected Accounts</h2>
+            <div className={styles.accountsList}>
+              {connectedAccounts.map((account, index) => (
+                <div key={index} className={styles.accountItem}>
+                  <div className={styles.accountInfo}>
+                    <span className={styles.accountIcon}>
+                      {account.type === 'wallet' && '👛'}
+                      {account.type === 'email' && '📧'}
+                      {account.type === 'twitter_oauth' && '🐦'}
                     </span>
-                    <span className={styles.accountType}>{account.type}</span>
+                    <div className={styles.accountDetails}>
+                      <span className={styles.accountName}>
+                        {account.type === 'wallet' && `${account.address.slice(0, 6)}...${account.address.slice(-4)}`}
+                        {account.type === 'email' && account.address}
+                        {account.type === 'twitter_oauth' && `@${user.twitter?.username}`}
+                      </span>
+                      <span className={styles.accountType}>{account.type}</span>
+                    </div>
+                  </div>
+                  <div className={styles.accountStatus}>
+                    <span className={styles.statusBadge}>Connected</span>
                   </div>
                 </div>
-                <div className={styles.accountStatus}>
-                  <span className={styles.statusBadge}>Connected</span>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className={styles.profileCard}>
-          <h2>🔌 Connect More</h2>
-          <div className={styles.buttonGroup}>
-            <button onClick={() => linkWallet()} className={styles.connectButton}>
-              <span className={styles.buttonIcon}>👛</span>
-              Connect Wallet
-            </button>
-            <button onClick={() => linkEmail()} className={styles.connectButton}>
-              <span className={styles.buttonIcon}>📧</span>
-              Connect Email
-            </button>
-            <button onClick={() => linkTwitter()} className={styles.connectButton}>
-              <span className={styles.buttonIcon}>🐦</span>
-              Connect Twitter
-            </button>
-          </div>
-        </div>
-
-        {!hasEmbeddedWallet && (
+          {/* Connect More Section */}
           <div className={styles.profileCard}>
-            <h2>✨ Create Embedded Wallet</h2>
+            <h2>🔌 Connect More</h2>
             <div className={styles.buttonGroup}>
-              <button onClick={() => createWallet()} className={styles.createWallet}>
-                <span className={styles.buttonIcon}>🌟</span>
-                Create Wallet
+              <button onClick={() => linkWallet()} className={styles.connectButton}>
+                <span className={styles.buttonIcon}>👛</span>
+                Connect Wallet
+              </button>
+              <button onClick={() => linkEmail()} className={styles.connectButton}>
+                <span className={styles.buttonIcon}>📧</span>
+                Connect Email
+              </button>
+              <button onClick={() => linkTwitter()} className={styles.connectButton}>
+                <span className={styles.buttonIcon}>🐦</span>
+                Connect Twitter
               </button>
             </div>
           </div>
-        )}
+
+          {/* Wallets Section */}
+          <RemoWallets onWalletSelect={handleWalletSelect} />
+
+          {/* Contacts Section */}
+          {userId && <Contacts userId={userId} />}
+
+          {/* Create Embedded Wallet Section */}
+          {!hasEmbeddedWallet && (
+            <div className={styles.profileCard}>
+              <h2>✨ Create Embedded Wallet</h2>
+              <div className={styles.buttonGroup}>
+                <button onClick={() => createWallet()} className={styles.createWallet}>
+                  <span className={styles.buttonIcon}>🌟</span>
+                  Create Wallet
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
