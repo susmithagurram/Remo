@@ -30,7 +30,7 @@
         .avatar {
           width: 80px;
           height: 80px;
-          background: rgba(0, 0, 0, 0.05);
+          background: #f0f0f0;
           border: 2px solid rgba(0, 0, 0, 0.1);
           border-radius: 50%;
           display: flex;
@@ -73,17 +73,19 @@
           align-items: center;
           gap: 1rem;
           padding: 1rem;
-          background: rgba(255, 255, 255, 0.05);
+          background: #f8f8f8;
           border-radius: 12px;
 
           .info-label {
             min-width: 120px;
             font-weight: 500;
+            color: #000;
             opacity: 0.8;
           }
 
           .info-value {
             font-weight: 500;
+            color: #000;
           }
         }
       }
@@ -98,7 +100,7 @@
           justify-content: space-between;
           align-items: center;
           padding: 1rem;
-          background: rgba(255, 255, 255, 0.05);
+          background: #f8f8f8;
           border-radius: 12px;
 
           .account-info {
@@ -116,11 +118,12 @@
 
               .account-name {
                 font-weight: 500;
+                color: #000;
               }
 
               .account-type {
                 font-size: 0.9rem;
-                opacity: 0.7;
+                color: #666;
               }
             }
           }
@@ -129,7 +132,7 @@
             .status-badge {
               padding: 0.4rem 1rem;
               background: rgba(74, 222, 128, 0.2);
-              color: #4ade80;
+              color: #2b8a3e;
               border-radius: 20px;
               font-size: 0.9rem;
               font-weight: 500;
@@ -148,9 +151,9 @@
           align-items: center;
           gap: 0.5rem;
           padding: 0.8rem 2rem;
-          border: 2px solid #fff;
+          border: 2px solid #000;
           border-radius: 25px;
-          background: transparent;
+          background: #000;
           color: #fff;
           font-size: 1.1rem;
           transition: all 0.3s ease;
@@ -163,17 +166,18 @@
           }
 
           &:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: #333;
             transform: translateY(-2px);
           }
         }
 
         .create-wallet {
-          border-color: #4ade80;
-          color: #4ade80;
+          background: #000;
+          border-color: #000;
+          color: #fff;
 
           &:hover {
-            background: rgba(74, 222, 128, 0.1);
+            background: #333;
           }
         }
       }
@@ -192,20 +196,20 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
+    background: #f8f8f8;
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 
     &:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: #f0f0f0;
       transform: translateX(5px);
     }
 
     &.selected {
-      background: rgba(103, 111, 255, 0.15);
-      border-color: rgba(103, 111, 255, 0.3);
+      background: rgba(0, 0, 0, 0.05);
+      border-color: rgba(0, 0, 0, 0.2);
     }
   }
 
@@ -217,6 +221,7 @@
 
   .walletIcon {
     font-size: 1.5rem;
+    color: #000;
   }
 
   .walletDetails {
@@ -226,18 +231,18 @@
 
   .walletName {
     font-weight: 500;
-    color: #fff;
+    color: #000;
   }
 
   .walletAddress {
     font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.7);
+    color: #666;
   }
 
   .selectedBadge {
     padding: 0.4rem 1rem;
-    background: rgba(103, 111, 255, 0.2);
-    color: #676FFF;
+    background: rgba(0, 0, 0, 0.1);
+    color: #000;
     border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 500;
@@ -251,17 +256,18 @@
 
   .walletNameInput {
     flex: 1;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: #f8f8f8;
+    border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     padding: 0.8rem 1rem;
-    color: #fff;
+    color: #000;
     font-size: 1rem;
     outline: none;
     transition: all 0.2s ease;
 
     &:focus {
-      border-color: rgba(103, 111, 255, 0.5);
+      border-color: #000;
+      background: #fff;
     }
 
     &:disabled {
@@ -272,8 +278,8 @@
 
   .createWalletButton {
     padding: 0.8rem 1.5rem;
-    background: rgba(103, 111, 255, 0.15);
-    border: 1px solid rgba(103, 111, 255, 0.3);
+    background: #000;
+    border: 1px solid #000;
     border-radius: 8px;
     color: #fff;
     font-size: 1rem;
@@ -281,7 +287,7 @@
     transition: all 0.2s ease;
 
     &:hover:not(:disabled) {
-      background: rgba(103, 111, 255, 0.25);
+      background: #333;
       transform: translateY(-2px);
     }
 
@@ -299,22 +305,23 @@
 }
 
 .usernameInput {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #f8f8f8;
+  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 6px;
   padding: 0.5rem;
-  color: #fff;
+  color: #000;
   font-size: 1rem;
   outline: none;
 }
 
 .usernameInput:focus {
-  border-color: rgba(103, 111, 255, 0.5);
+  border-color: #000;
+  background: #fff;
 }
 
 .saveButton {
-  background: rgba(103, 111, 255, 0.2);
-  border: 1px solid rgba(103, 111, 255, 0.5);
+  background: #000;
+  border: 1px solid #000;
   border-radius: 6px;
   padding: 0.5rem 1rem;
   color: #fff;
@@ -323,13 +330,14 @@
 }
 
 .saveButton:hover {
-  background: rgba(103, 111, 255, 0.3);
+  background: #333;
 }
 
 .usernameDisplay {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  color: #000;
 }
 
 .editButton {
@@ -339,6 +347,7 @@
   cursor: pointer;
   opacity: 0.7;
   transition: opacity 0.2s ease;
+  color: #000;
 }
 
 .editButton:hover {
@@ -346,9 +355,9 @@
 }
 
 .errorMessage {
-  background: rgba(255, 0, 0, 0.1);
-  border: 1px solid rgba(255, 0, 0, 0.2);
-  color: #ff6b6b;
+  background: #fff3f3;
+  border: 1px solid #ff8080;
+  color: #e60000;
   padding: 0.8rem;
   border-radius: 8px;
   margin-bottom: 1rem;
@@ -379,24 +388,24 @@
 }
 
 .selectButton {
-  background: rgba(103, 111, 255, 0.15);
-  border-color: rgba(103, 111, 255, 0.3);
-  color: #676FFF;
-}
-
-.selectButton:hover {
-  background: rgba(103, 111, 255, 0.25);
-}
-
-.copyButton {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: #000;
+  border-color: #000;
   color: #fff;
 }
 
+.selectButton:hover {
+  background: #333;
+}
+
+.copyButton {
+  background: #f8f8f8;
+  border-color: rgba(0, 0, 0, 0.2);
+  color: #000;
+}
+
 .copyButton:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: #f0f0f0;
+  border-color: rgba(0, 0, 0, 0.3);
 }
 
 .addressContainer {
@@ -408,7 +417,7 @@
 .copyAddressButton {
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.7);
+  color: #666;
   cursor: pointer;
   padding: 0.2rem;
   font-size: 1rem;
@@ -420,8 +429,8 @@
 }
 
 .copyAddressButton:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.1);
+  color: #000;
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .contactsList {
@@ -436,14 +445,14 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #f8f8f8;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   transition: all 0.2s ease;
 }
 
 .contactItem:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: #f0f0f0;
   transform: translateY(-2px);
 }
 
@@ -455,6 +464,7 @@
 
 .contactIcon {
   font-size: 1.5rem;
+  color: #000;
 }
 
 .contactDetails {
@@ -466,7 +476,7 @@
 .contactName {
   font-size: 1rem;
   font-weight: 500;
-  color: #fff;
+  color: #000;
 }
 
 .createContactForm {
@@ -478,22 +488,23 @@
 
 .contactInput {
   padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #f8f8f8;
+  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  color: #fff;
+  color: #000;
   font-size: 0.95rem;
 }
 
 .contactInput:focus {
   outline: none;
-  border-color: rgba(103, 111, 255, 0.5);
+  border-color: #000;
+  background: #fff;
 }
 
 .createContactButton {
   padding: 0.75rem 1rem;
-  background: rgba(103, 111, 255, 0.2);
-  border: 1px solid rgba(103, 111, 255, 0.3);
+  background: #000;
+  border: 1px solid #000;
   border-radius: 8px;
   color: #fff;
   font-size: 0.95rem;
@@ -502,7 +513,7 @@
 }
 
 .createContactButton:hover:not(:disabled) {
-  background: rgba(103, 111, 255, 0.3);
+  background: #333;
   transform: translateY(-2px);
 }
 
@@ -514,7 +525,7 @@
 .deleteButton {
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.6);
+  color: #666;
   cursor: pointer;
   font-size: 1.2rem;
   padding: 0.5rem;
@@ -523,6 +534,6 @@
 }
 
 .deleteButton:hover {
-  color: #ff3b30;
-  background: rgba(255, 59, 48, 0.1);
+  color: #e60000;
+  background: rgba(230, 0, 0, 0.1);
 } 
