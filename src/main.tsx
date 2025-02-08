@@ -3,12 +3,8 @@ import ReactDOM from 'react-dom/client';
 import { PrivyProvider } from '@privy-io/react-auth';
 import App from './App';
 import './styles/index.css';
-import { telegramService } from './agent/telegram/telegramService';
 
-// Initialize Telegram service
-console.log('Initializing Telegram service...');
-telegramService;
-
+// Remove Telegram initialization from client-side
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <PrivyProvider
