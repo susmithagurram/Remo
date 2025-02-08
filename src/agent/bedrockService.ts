@@ -47,7 +47,14 @@ class BedrockService {
           console.log('Routing to Juliet:', lastMessage.content);
           const response = await agentOrchestrator.routeRequest(lastMessage.content);
           console.log('Juliet response:', response);
-          return response.response;
+          
+          // Process Markdown formatting
+          const formattedResponse = response.response
+            .replace(/```/g, '') // Remove backticks
+            .replace(/\n\n+/g, '\n\n') // Normalize multiple newlines to double newlines
+            .trim(); // Remove extra whitespace
+          
+          return formattedResponse;
         } catch (error) {
           console.error('Detailed Juliet routing error:', {
             error,
@@ -235,14 +242,110 @@ class BedrockService {
           txRequest.from = selectedWallet.address;
           try {
             const tx = await walletService.sendTransaction(txRequest);
-            return `I've successfully initiated the transaction on Sepolia testnet!\n\nTransaction Details:\nFrom: ${tx.from}\nTo: ${tx.to}\nAmount: ${(parseInt(tx.value) / 1e18).toFixed(4)} ETH\nTransaction Hash: ${tx.hash}\n\nYou can track your transaction at https://sepolia.etherscan.io/tx/${tx.hash}\n\nThe transaction has been submitted to the network and is being processed. It may take a few minutes to be confirmed.`;
+            return `💫 Transaction Initiated Successfully!
+──────────────────────────────────
+
+📊 Transaction Details
+───────────────────
+• Network: Sepolia Testnet
+• Status: Pending Confirmation
+• Amount: ${(parseInt(tx.value) / 1e18).toFixed(4)} ETH
+
+👤 From Wallet
+───────────────
+${tx.from}
+
+👥 To Address
+───────────────
+${tx.to}
+
+🔗 Transaction Hash
+───────────────────
+${tx.hash}
+
+🌐 Track Your Transaction
+────────────────────────
+View on Etherscan: https://sepolia.etherscan.io/tx/${tx.hash}
+
+ℹ️ Next Steps
+────────────
+• Your transaction has been submitted to the network
+• Confirmation typically takes 2-5 minutes
+• You'll be able to view the transaction status on Etherscan
+
+Need help? Just ask me to:
+• Check transaction status
+• Explain any error messages
+• Help with future transactions`;
+
           } catch (error: any) {
             if (error.message.includes('Insufficient balance')) {
-              return `${error.message}\n\nTo get test ETH for your wallet, you can use these Sepolia faucets:\n1. Alchemy Faucet: https://sepoliafaucet.com\n2. Infura Faucet: https://www.infura.io/faucet/sepolia\n\nWould you like me to guide you through getting test ETH?`;
+              return `❌ Transaction Failed: Insufficient Balance
+
+💡 How to Get Test ETH
+──────────────────────
+You can get free test ETH from these Sepolia faucets:
+
+1️⃣ Alchemy Faucet
+   • Visit: https://sepoliafaucet.com
+   • Connect your wallet
+   • Request test ETH
+
+2️⃣ Infura Faucet
+   • Visit: https://www.infura.io/faucet/sepolia
+   • Follow the instructions
+   • Receive test ETH
+
+Need help? I can guide you through:
+• Using the faucets
+• Checking your balance
+• Setting up your wallet correctly
+
+Would you like me to walk you through getting test ETH?`;
+
             } else if (error.message.includes('gas')) {
-              return "The transaction failed due to gas estimation issues. This usually means either:\n1. The network is congested\n2. The recipient address might be a contract that's rejecting the transaction\n\nWould you like to try again with a higher gas limit?";
+              return `⚠️ Transaction Failed: Gas Estimation Error
+──────────────────────────────────────
+
+Possible Reasons:
+1. Network congestion
+2. Complex contract interaction
+3. Recipient contract rejecting the transaction
+
+💡 Suggested Solutions:
+• Try again with a higher gas limit
+• Wait for network congestion to decrease
+• Verify the recipient address is correct
+
+Would you like to:
+• Retry with adjusted gas settings?
+• Check network status?
+• Verify the recipient address?`;
+
             } else {
-              return `The transaction failed: ${error.message}\n\nPlease verify:\n1. You have enough Sepolia ETH for the transaction and gas fees\n2. The recipient address is correct\n3. The network is functioning properly\n\nWould you like me to help troubleshoot?`;
+              return `❌ Transaction Failed
+────────────────────
+
+Error Message: ${error.message}
+
+🔍 Troubleshooting Checklist:
+1. Sufficient Balance
+   • Current balance: [Will check if requested]
+   • Required amount: ${(parseInt(txRequest.value) / 1e18).toFixed(4)} ETH
+
+2. Network Status
+   • Sepolia Testnet
+   • Check for any known issues
+
+3. Address Verification
+   • Confirm recipient address is correct
+   • Verify address format
+
+Would you like me to help:
+• Check your current balance
+• Verify the recipient address
+• Troubleshoot specific issues
+• Try the transaction again`;
             }
           }
         }

@@ -300,6 +300,33 @@ const Chat: React.FC = () => {
               </svg>
             </button>
           </div>
+
+          <div className={styles.bottomActions}>
+            <button className={styles.actionButton}>
+              <span className={styles.actionIcon}>💻</span>
+              Code
+            </button>
+            <button className={styles.actionButton}>
+              <span className={styles.actionIcon}>🎓</span>
+              Get advice
+            </button>
+            <button className={styles.actionButton}>
+              <span className={styles.actionIcon}>📝</span>
+              Summarize text
+            </button>
+            <button className={styles.actionButton}>
+              <span className={styles.actionIcon}>✍️</span>
+              Help me write
+            </button>
+            <button className={styles.actionButton}>
+              <span className={styles.actionIcon}>📊</span>
+              Analyze data
+            </button>
+            <button className={styles.actionButton}>
+              <span className={styles.actionIcon}>⋯</span>
+              More
+            </button>
+          </div>
         </form>
       </div>
     </div>

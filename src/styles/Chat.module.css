@@ -237,6 +237,49 @@
   align-items: flex-end;
   gap: 8px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+.bottomActions {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding: 0.5rem 0;
+  margin: 0 -0.5rem;
+  padding: 0 0.5rem;
+}
+
+.bottomActions::-webkit-scrollbar {
+  display: none;
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #202123;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+  color: #ECECF1;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.actionButton:hover {
+  background: #2A2B32;
+}
+
+.actionIcon {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+/* Hide bottom actions when there are messages */
+.messagesContainer:not(:empty) ~ .inputForm .bottomActions {
+  display: none;
 }
 
 /* When there are messages, move the input to bottom */

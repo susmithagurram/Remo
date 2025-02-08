@@ -9,7 +9,7 @@ const ChatBox: React.FC = () => {
     {
       id: '0',
       role: 'assistant',
-      content: remoPersonality.introduction,
+      content: 'Hello, I am Remo how can I help you?',
       timestamp: Date.now()
     }
   ]);
@@ -58,14 +58,12 @@ const ChatBox: React.FC = () => {
 
     try {
       const response = await bedrockService.generateResponse([userMessage]);
-
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: response,
         timestamp: Date.now()
       };
-
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
       console.error('Error in chat:', error);
@@ -77,11 +75,6 @@ const ChatBox: React.FC = () => {
 
   return (
     <div className={styles.chatContainer}>
-      <div className={styles.chatHeader}>
-        <h2>Chat with {remoPersonality.name}</h2>
-        <p className={styles.subtitle}>{remoPersonality.role}</p>
-      </div>
-
       <div className={styles.messagesContainer}>
         {messages.map((message) => (
           <div
@@ -116,41 +109,70 @@ const ChatBox: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={handleSubmit} className={styles.inputForm}>
-        <textarea
-          ref={inputRef}
-          value={input}
-          onChange={handleInputChange}
-          placeholder="Type your message..."
-          rows={1}
-          className={styles.input}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              handleSubmit(e);
-            }
-          }}
-        />
-        <button 
-          type="submit" 
-          className={styles.sendButton}
-          disabled={isLoading || !input.trim()}
-        >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+      <div className={styles.inputSection}>
+        <form onSubmit={handleSubmit} className={styles.inputForm}>
+          <textarea
+            ref={inputRef}
+            value={input}
+            onChange={handleInputChange}
+            placeholder="Message Remo..."
+            rows={1}
+            className={styles.input}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(e);
+              }
+            }}
+          />
+          <button 
+            type="submit" 
+            className={styles.sendButton}
+            disabled={isLoading || !input.trim()}
           >
-            <line x1="22" y1="2" x2="11" y2="13"></line>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-          </svg>
-        </button>
-      </form>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </form>
+
+        <div className={styles.bottomActions}>
+          <button className={styles.actionButton}>
+            <span className={styles.actionIcon}>💻</span>
+            Code
+          </button>
+          <button className={styles.actionButton}>
+            <span className={styles.actionIcon}>🎓</span>
+            Get advice
+          </button>
+          <button className={styles.actionButton}>
+            <span className={styles.actionIcon}>📝</span>
+            Summarize text
+          </button>
+          <button className={styles.actionButton}>
+            <span className={styles.actionIcon}>✍️</span>
+            Help me write
+          </button>
+          <button className={styles.actionButton}>
+            <span className={styles.actionIcon}>📊</span>
+            Analyze data
+          </button>
+          <button className={styles.actionButton}>
+            <span className={styles.actionIcon}>⋯</span>
+            More
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
