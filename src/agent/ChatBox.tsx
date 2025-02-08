@@ -72,6 +72,36 @@ const ChatBox: React.FC = () => {
     }
   };
 
+  const handleActionClick = (action: string) => {
+    let message = '';
+    switch (action) {
+      case 'tasks':
+        message = 'show tasks';
+        break;
+      case 'send':
+        message = 'send 0.0001 eth to susmitha';
+        break;
+      case 'todo':
+        message = 'add say hi to simba to the to do list';
+        break;
+      case 'book':
+        message = 'suggest me a book';
+        break;
+      case 'wallet':
+        message = 'create wallet called Pepe';
+        break;
+      default:
+        return;
+    }
+    
+    setInput(message);
+    if (inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.style.height = 'inherit';
+      inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
+    }
+  };
+
   return (
     <div className={styles.chatContainer}>
       <div className={styles.messagesContainer}>
@@ -146,25 +176,40 @@ const ChatBox: React.FC = () => {
         </form>
 
         <div className={styles.bottomActions}>
-          <button className={styles.actionButton}>
-            <span className={styles.actionIcon}>💻</span>
-            Code
+          <button 
+            className={styles.actionButton}
+            onClick={() => handleActionClick('tasks')}
+          >
+            <span className={styles.actionIcon}>📋</span>
+            Show tasks
           </button>
-          <button className={styles.actionButton}>
-            <span className={styles.actionIcon}>🎓</span>
-            Get advice
+          <button 
+            className={styles.actionButton}
+            onClick={() => handleActionClick('send')}
+          >
+            <span className={styles.actionIcon}>💸</span>
+            Send 0.0001 ETH
           </button>
-          <button className={styles.actionButton}>
-            <span className={styles.actionIcon}>📝</span>
-            Summarize text
+          <button 
+            className={styles.actionButton}
+            onClick={() => handleActionClick('todo')}
+          >
+            <span className={styles.actionIcon}>✅</span>
+            Add to-do
           </button>
-          <button className={styles.actionButton}>
-            <span className={styles.actionIcon}>✍️</span>
-            Help me write
+          <button 
+            className={styles.actionButton}
+            onClick={() => handleActionClick('book')}
+          >
+            <span className={styles.actionIcon}>📚</span>
+            Book suggestion
           </button>
-          <button className={styles.actionButton}>
-            <span className={styles.actionIcon}>📊</span>
-            Analyze data
+          <button 
+            className={styles.actionButton}
+            onClick={() => handleActionClick('wallet')}
+          >
+            <span className={styles.actionIcon}>👛</span>
+            Create wallet
           </button>
           <button className={styles.actionButton}>
             <span className={styles.actionIcon}>⋯</span>

@@ -302,25 +302,40 @@ const Chat: React.FC = () => {
           </div>
 
           <div className={styles.bottomActions}>
-            <button className={styles.actionButton}>
-              <span className={styles.actionIcon}>💻</span>
-              Code
+            <button 
+              className={styles.actionButton}
+              onClick={() => setInput('show tasks')}
+            >
+              <span className={styles.actionIcon}>📋</span>
+              Show tasks
             </button>
-            <button className={styles.actionButton}>
-              <span className={styles.actionIcon}>🎓</span>
-              Get advice
+            <button 
+              className={styles.actionButton}
+              onClick={() => setInput('send 0.0001 eth to susmitha')}
+            >
+              <span className={styles.actionIcon}>💸</span>
+              Send 0.0001 ETH to Susmitha
             </button>
-            <button className={styles.actionButton}>
-              <span className={styles.actionIcon}>📝</span>
-              Summarize text
+            <button 
+              className={styles.actionButton}
+              onClick={() => setInput('add say hi to simba to the to do list')}
+            >
+              <span className={styles.actionIcon}>✅</span>
+              Add "Say hi to Simba" to todo
             </button>
-            <button className={styles.actionButton}>
-              <span className={styles.actionIcon}>✍️</span>
-              Help me write
+            <button 
+              className={styles.actionButton}
+              onClick={() => setInput('suggest me a book')}
+            >
+              <span className={styles.actionIcon}>📚</span>
+              Suggest me a book
             </button>
-            <button className={styles.actionButton}>
-              <span className={styles.actionIcon}>📊</span>
-              Analyze data
+            <button 
+              className={styles.actionButton}
+              onClick={() => setInput('create wallet called Pepe')}
+            >
+              <span className={styles.actionIcon}>👛</span>
+              Create wallet called Pepe
             </button>
             <button className={styles.actionButton}>
               <span className={styles.actionIcon}>⋯</span>
