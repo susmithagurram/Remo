@@ -3,6 +3,7 @@
 A sophisticated personal AI assistant powered by AWS Bedrock (Claude 3 Sonnet) with multi-agent collaboration capabilities. Remo helps make users' lives easier through seamless task management, informed recommendations, and efficient problem-solving.
 
 ## Features
+![archetecture](https://github.com/user-attachments/assets/d509ca43-b442-4ebf-9259-2ae7bd3603a8)
 
 ### Core Capabilities
 - Natural language task management
