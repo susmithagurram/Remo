@@ -1,6 +1,6 @@
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 import { Message } from './types';
-import { Contact } from './viem/types';
+import { Contact, RemoWallet } from './viem/types';
 import { parseTransactionCommand } from './viem/transactionParser';
 import { walletService } from './viem/walletService';
 import { contactsService } from './contacts/contactsService';
@@ -26,12 +26,29 @@ class BedrockService {
   setUserId(userId: string) {
     console.log('Setting bedrockService userId:', userId);
     this.userId = userId;
+    // Initialize wallet service with userId
+    walletService.initializeForUser(userId);
   }
 
   async generateResponse(messages: Message[]): Promise<string> {
     try {
       const lastMessage = messages[messages.length - 1];
+      console.log('Processing message in generateResponse:', lastMessage.content);
       
+      // Check for contact-related commands first
+      if (lastMessage.role === 'user') {
+        console.log('Checking for contact commands...');
+        const contactResponse = await this.handleContactCommand(lastMessage.content);
+        console.log('Contact response:', contactResponse);
+        if (contactResponse) return contactResponse;
+      }
+
+      // Then check for wallet-related commands
+      if (lastMessage.role === 'user') {
+        const walletResponse = await this.handleWalletCommand(lastMessage.content);
+        if (walletResponse) return walletResponse;
+      }
+
       // Check for task-related commands first
       if (lastMessage.content.toLowerCase().includes('task') || 
           lastMessage.content.toLowerCase().includes('to do')) {
@@ -234,13 +251,17 @@ class BedrockService {
         // Handle transaction request
         const txRequest = parseTransactionCommand(lastMessage.content);
         if (txRequest) {
+          console.log('Transaction request detected:', txRequest);
           const selectedWallet = walletService.getSelectedWallet();
+          console.log('Current selected wallet:', selectedWallet);
+
           if (!selectedWallet) {
-            return "I apologize, but I need you to connect your wallet first to help you with transactions. Would you like me to guide you through that process?";
+            return "Please select a wallet in your profile first to send ETH.";
           }
 
           txRequest.from = selectedWallet.address;
           try {
+            console.log('Attempting transaction with wallet:', selectedWallet);
             const tx = await walletService.sendTransaction(txRequest);
             return `💫 Transaction Initiated Successfully!
 ──────────────────────────────────
@@ -509,7 +530,7 @@ ${this.formatMessages(messages)}\n\nAssistant:`,
             completedTasks.map((t, i) => `${i + 1}. ${t.title}`).join('\n');
         }
 
-        response += "\n\nYou can add new tasks by saying 'add task: [task description]' or mark tasks as complete by saying 'complete task [number]'.";
+        response += "\n\nYou can add new tasks by saying 'add task: [description]' or mark tasks as complete by saying 'complete task [number]'.";
         
         return response;
       } catch (error) {
@@ -520,6 +541,162 @@ ${this.formatMessages(messages)}\n\nAssistant:`,
 
     // Add this return statement at the end
     return "I can help you manage tasks. Try saying 'show tasks', 'add task: [description]', or 'complete task [number]'.";
+  }
+
+  private async handleWalletCommand(text: string): Promise<string | null> {
+    // Keep only wallet-related code
+    const listWalletsMatch = text.toLowerCase().match(/(?:show|list|display|what are|get|show all|list all|tell me|what)(?:\s+(?:my|the|all|your))?\s+(?:remo\s+)?wallets?/i);
+    
+    if (listWalletsMatch) {
+      if (!this.userId) {
+        console.log('No userId found for listing wallets');
+        return "I need you to connect your wallet first to show your Remo wallets.";
+      }
+
+      try {
+        // Reinitialize to get fresh data
+        await walletService.initializeForUser(this.userId);
+        const wallets = walletService.getWallets();
+        console.log('Retrieved wallets:', wallets);
+        
+        if (wallets.length === 0) {
+          return "You don't have any Remo wallets yet. Would you like me to create one for you?";
+        }
+
+        const selectedWallet = walletService.getSelectedWallet();
+        const walletList = this.formatWalletList(wallets, selectedWallet?.id);
+        
+        return `📝 Your Wallets:\n${walletList}\n\nSay "select wallet [name]" to use one.`;
+      } catch (error) {
+        console.error('Error listing wallets:', error);
+        return "I encountered an error while retrieving your wallets. Please try again later.";
+      }
+    }
+
+    // Check for wallet creation request
+    const createWalletMatch = text.toLowerCase().match(/(?:create|make|new)\s+(?:a\s+)?(?:remo\s+)?wallet(?:\s+(?:called|named)\s+)?(?:"|')?([^"']+)(?:"|')?/i);
+    
+    if (createWalletMatch) {
+      if (!this.userId) {
+        console.log('No userId found for wallet creation');
+        return "I need you to connect your wallet first before I can create a Remo wallet for you.";
+      }
+
+      try {
+        // Extract name from match or use default
+        const name = createWalletMatch[1]?.trim() || `Remo Wallet ${Date.now()}`;
+        
+        // If name starts with "called" or "named", remove it
+        const cleanName = name.replace(/^(?:called|named)\s+/i, '').trim();
+        
+        console.log('Attempting to create wallet with name:', cleanName);
+        console.log('Current userId:', this.userId);
+        
+        await walletService.initializeForUser(this.userId);
+        const wallet = await walletService.createWallet(cleanName);
+        console.log('Wallet created successfully:', wallet);
+        
+        return `✨ Created wallet "${wallet.name}"\n📍 ${wallet.address.slice(0, 6)}...${wallet.address.slice(-4)}`;
+      } catch (error) {
+        console.error('Detailed error creating wallet:', {
+          error,
+          userId: this.userId,
+          stack: error instanceof Error ? error.stack : undefined
+        });
+        return "I encountered an error while creating your wallet. Please try again later.";
+      }
+    }
+
+    // Check for wallet selection request
+    const selectWalletMatch = text.toLowerCase().match(/(?:select|use|choose)\s+(?:the\s+)?(?:remo\s+)?wallet(?:\s+(?:called|named)\s+)?(.+)/i);
+    
+    if (selectWalletMatch) {
+      if (!this.userId) {
+        return "I need you to connect your wallet first before I can select a Remo wallet.";
+      }
+
+      const walletName = selectWalletMatch[1]?.trim();
+      if (!walletName) {
+        return "Please specify which wallet you'd like to select by name.";
+      }
+
+      try {
+        // Ensure wallets are loaded
+        await walletService.initializeForUser(this.userId);
+        const wallets = walletService.getWallets();
+        const wallet = wallets.find(w => w.name.toLowerCase() === walletName.toLowerCase());
+
+        if (!wallet) {
+          const walletList = this.formatWalletList(wallets);
+          return `I couldn't find a wallet named "${walletName}". Available wallets:\n${walletList}`;
+        }
+
+        // Set the selected wallet
+        walletService.setSelectedWallet(wallet.id);
+        console.log('Selected wallet:', wallet);
+
+        // Verify selection
+        const selectedWallet = walletService.getSelectedWallet();
+        if (!selectedWallet) {
+          throw new Error('Failed to set selected wallet');
+        }
+
+        return `✅ Selected wallet "${wallet.name}"\n📍 ${wallet.address}\n💰 ${wallet.balance || '0'} ETH\n\nThis wallet is now ready for transactions.`;
+      } catch (error) {
+        console.error('Error selecting wallet:', error);
+        return "I encountered an error while selecting your wallet. Please try again later.";
+      }
+    }
+
+    return null;
+  }
+
+  private formatWalletList(wallets: RemoWallet[], selectedId?: string): string {
+    return wallets.map((wallet, index) => {
+      const isSelected = wallet.id === selectedId;
+      return `${index + 1}. ${wallet.name} ${isSelected ? '✦' : ''}\n   📍 ${wallet.address}\n   💰 ${wallet.balance || '0'} ETH`;
+    }).join('\n');
+  }
+
+  private async handleContactCommand(text: string): Promise<string | null> {
+    console.log('Handling contact command:', text);
+    
+    const listContactsMatch = text.toLowerCase().match(/(?:can you |please |)(?:show|list|display|what are|get|tell me|show all|list all)(?:\s+(?:my|the|all|your))?\s*(?:contacts?|address book)/i);
+    
+    if (listContactsMatch) {
+      console.log('Contact list request matched');
+      
+      if (!this.userId) {
+        console.error('No userId found for listing contacts');
+        return "Please connect your wallet first to view contacts.";
+      }
+      console.log('Using userId:', this.userId);
+
+      try {
+        console.log('Attempting to fetch contacts from DynamoDB...');
+        const contacts = await contactsService.getUserContacts(this.userId);
+        console.log('Retrieved contacts from DynamoDB:', contacts);
+        
+        if (!contacts || contacts.length === 0) {
+          console.log('No contacts found for user');
+          return "📝 No contacts found. Use 'add contact [name] [address]' to create one.";
+        }
+
+        // Simplified format: one contact per line with full address
+        const contactsList = contacts
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((contact, index) => `${index + 1}. ${contact.name} 📍 ${contact.walletAddress}`)
+          .join('\n');
+
+        return `📒 Contacts (${contacts.length})\n${'─'.repeat(20)}\n${contactsList}\n\n💡 Use 'add contact [name] [address]' to add more`;
+      } catch (error) {
+        console.error('Detailed error in handleContactCommand:', error);
+        return "Failed to retrieve contacts. Please try again.";
+      }
+    } else {
+      console.log('No contact command matched');
+    }
+    return null;
   }
 }
 

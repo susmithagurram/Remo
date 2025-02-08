@@ -21,22 +21,40 @@ class WalletService {
   }
 
   async initializeForUser(userId: string) {
+    console.log('Initializing wallet service for user:', userId);
+    console.log('Previous state:', {
+      selectedWalletId: this.selectedWalletId,
+      walletCount: this.wallets.size
+    });
+    
     this.userId = userId;
-    await this.loadWallets();
-  }
-
-  private async loadWallets() {
-    if (!this.userId) return;
     
     try {
-      const wallets = await dynamoDBService.getUserWallets(this.userId);
+      // Load wallets from DynamoDB
+      console.log('Loading wallets from DynamoDB...');
+      const wallets = await dynamoDBService.getUserWallets(userId);
+      console.log('Loaded wallets:', wallets);
+      
+      // Update local cache
       this.wallets.clear();
       wallets.forEach(wallet => {
         this.wallets.set(wallet.id, wallet);
       });
+      
+      // Maintain selected wallet if it still exists
+      if (this.selectedWalletId && !this.wallets.has(this.selectedWalletId)) {
+        console.log('Previously selected wallet no longer exists, clearing selection');
+        this.selectedWalletId = null;
+      }
+      
+      console.log('Wallet service initialized:', {
+        selectedWalletId: this.selectedWalletId,
+        walletCount: this.wallets.size,
+        wallets: Array.from(this.wallets.values())
+      });
     } catch (error) {
-      console.error('Error loading wallets:', error);
-      throw new Error('Failed to load wallets');
+      console.error('Error initializing wallet service:', error);
+      throw error;
     }
   }
 
@@ -225,16 +243,36 @@ class WalletService {
   }
 
   setSelectedWallet(walletId: string) {
+    console.log('Setting selected wallet with ID:', walletId);
+    console.log('Current wallets:', Array.from(this.wallets.entries()));
+    
     if (!this.wallets.has(walletId)) {
+      console.error('Wallet not found in available wallets');
       throw new Error('Wallet not found');
     }
+
     this.selectedWalletId = walletId;
-    this.updateWalletBalance(walletId);
+    const wallet = this.wallets.get(walletId);
+    console.log('Successfully set selected wallet:', {
+      selectedId: this.selectedWalletId,
+      wallet: wallet
+    });
+    return wallet;
   }
 
   getSelectedWallet(): RemoWallet | null {
-    if (!this.selectedWalletId) return null;
-    return this.wallets.get(this.selectedWalletId) || null;
+    console.log('Getting selected wallet...');
+    console.log('Current selectedWalletId:', this.selectedWalletId);
+    console.log('Available wallets:', Array.from(this.wallets.entries()));
+    
+    if (!this.selectedWalletId) {
+      console.log('No wallet currently selected');
+      return null;
+    }
+    
+    const wallet = this.wallets.get(this.selectedWalletId);
+    console.log('Retrieved selected wallet:', wallet);
+    return wallet || null;
   }
 
   getWallets(): RemoWallet[] {
