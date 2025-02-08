@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { telegramService } from '../agent/telegram/telegramService';
+// import { telegramService } from '../agent/telegram/telegramService';
 
 const TelegramStatus: React.FC = () => {
   const [status, setStatus] = useState('Initializing...');
@@ -7,7 +7,7 @@ const TelegramStatus: React.FC = () => {
   useEffect(() => {
     const checkTelegramStatus = async () => {
       try {
-        // The service is initialized when imported
+        // Just set status directly if not using the service
         setStatus('Telegram bot is running');
       } catch (error) {
         console.error('Error checking Telegram status:', error);

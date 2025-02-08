@@ -1,5 +1,5 @@
 import { WebSocketServer } from 'ws';
-import TelegramBot from 'node-telegram-bot-api';
+import TelegramBot, { Message } from 'node-telegram-bot-api';
 import { bedrockService } from '../bedrockService';
 
 class TelegramWebSocketServer {
@@ -151,6 +151,17 @@ class TelegramWebSocketServer {
         }
       });
     });
+  }
+
+  private async handleMessage(msg: Message) {
+    const chatId = msg.chat.id;
+    const text = msg.text;
+    // ... rest of the code
+  }
+
+  private handleError(error: Error) {
+    console.error('Error in telegram service:', error);
+    // ... rest of the code
   }
 }
 

@@ -1,11 +1,11 @@
-import React from 'react';
+import type { FC } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Chat from './pages/Chat';
 import Profile from './pages/Profile';
 import { LoginProvider, ProtectedRoute } from './privy/PrivyAuth';
 
-function App() {
+const App: FC = () => {
   return (
     <LoginProvider>
       <Router>

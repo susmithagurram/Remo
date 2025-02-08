@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Message } from './types';
 import { bedrockService } from './bedrockService';
-import { remoPersonality } from './config';
 import styles from './ChatBox.module.css';
 
 const ChatBox: React.FC = () => {
