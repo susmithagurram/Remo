@@ -5,7 +5,7 @@ built by [Susmitha](https://susmitha.xyz/) & [Suhas](https://suhas.gg/)
 
 Aditionally you can deploy this using [Autonome](https://dev.autonome.fun/autonome)
 
-Remo is a Personal AI Assistant that can be hired by every human in the planet. Remo helps make users' lives easier through seamless task management, informed recommendations, and efficient problem-solving. A sophisticated personal AI assistant powered by **Privy** for auth and wallet creation, **Viem** for Blockchain interactions on **sepolia** and **Base**, **AWS Bedrock** (Claude 3 Sonnet) with multi-agent collaboration capabilities. 
+**Remo is a Personal AI Assistant** that can be hired by every human in the planet. Personal Assistant is not only for Rich! Remo helps make users' lives easier through seamless task management, informed recommendations, and efficient problem-solving. A sophisticated personal AI assistant powered by **Privy** for auth and wallet creation, **Viem** for Blockchain interactions on **sepolia** and **Base**, **AWS Bedrock** (Claude 3 Sonnet) with multi-agent collaboration capabilities. 
 
 Nevertheless this is just Version 1.0 project born in Agentic Ethereum 2025 who can make Real time blockchain interactions, Save contacts (Name : Wallet address), Create unlimited wallets, uses AWS Bedrock with Multi-Agent Orchestration and give suggestions for Books and travel using it's Knowledge Base(RAG), can save your tasks/to-do lists. Othe than the webpage user can also integrate Telegram and chat with remo. No need of remembering your keys Remo can now fetch them from AWS dynomoDB easily without revealing them!
 
