@@ -1,46 +1,48 @@
 # Remo AI Assistant
+![Website](https://remo.gg/) built by ![Susmitha](https://susmitha.xyz/) & ![Suhas](https://suhas.gg/) 
+Aditionally you can deploy this using ![Autonome](https://dev.autonome.fun/autonome)
 
-A sophisticated personal AI assistant powered by AWS Bedrock (Claude 3 Sonnet) with multi-agent collaboration capabilities. Remo helps make users' lives easier through seamless task management, informed recommendations, and efficient problem-solving.
+Remo is a Personal AI Assistant that can be hired by every human in the planet. Remo helps make users' lives easier through seamless task management, informed recommendations, and efficient problem-solving. A sophisticated personal AI assistant powered by **Privy** for auth and wallet creation, **Viem** for Blockchain interactions on **sepolia** and **Base**, **AWS Bedrock** (Claude 3 Sonnet) with multi-agent collaboration capabilities. 
 
-## Features
+Nevertheless this is just Version 1.0 project born in Agentic Ethereum 2025 who can make Real time blockchain interactions, Save contacts (Name : Wallet address), Create unlimited wallets, uses AWS Bedrock with Multi-Agent Orchestration and give suggestions for Books and travel using it's Knowledge Base(RAG), can save your tasks/to-do lists. Othe than the webpage user can also integrate Telegram and chat with remo. No need of remembering your keys Remo can now fetch them from AWS dynomoDB easily without revealing them!
+
+Please NOTE: This is version 1.0 there are some areas we need to update it.
+
+**Architecture**
 ![archetecture](https://github.com/user-attachments/assets/d509ca43-b442-4ebf-9259-2ae7bd3603a8)
 
-### Core Capabilities
-- Natural language task management
-- Multi-agent collaboration system
-- Real-time chat interface
-- Secure authentication with Privy
-- AWS Bedrock integration
-- DynamoDB for data persistence
-- Telegram bot integration
+The application uses a multi-layered architecture:
+1. Typescript, React frontend for user interface
+2. AWS Bedrock for AI processing
+3. DynamoDB for data persistence
+4. Privy for authentication + wallet creation
+5. Telegram integration for remote access
 
-### Task Management
-- Create and manage to-do lists
-- Mark tasks as complete
-- View pending and completed tasks
-- Natural language task creation
+### Data Flow
+1. User input → Frontend
+2. Frontend → Bedrock Service
+3. Bedrock Service → Remo → Specialized Agents(Based on service)
+4. Agents → DynamoDB (if needed)
+5. Response → Frontend
+6. Optional: Response → Telegram
 
-### Specialized Agents
-- **Juliet** (Orchestrator Agent)
-  - Coordinates between specialized agents
-  - Routes queries to appropriate agents
-  - Ensures cohesive responses
+Here are some of the favourite prompts of Remo!
 
-- **Book Agent**
-  - Literary recommendations
-  - Format and pricing options
-  - Personalized book suggestions
+1. Create a wallet called pepe
+2. Create a contact Vitalik, 0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B
+3. Select wallet pepe
+4. Show all my contacts / tasks
+5. Send 0.0001 eth to Vitalik
+6. I'm planning to go for a trip with a beach view can you suggest some locations
 
-- **Travel Agent**
-  - Destination planning
-  - Activity recommendations
-  - Travel timing and packing advice
-
-### Additional Features
-- Blockchain transaction management (Sepolia testnet)
-- Contact management system
-- Secure wallet management
-- Telegram bot integration for remote access
+## Improvements To-Do
+Here is our complete RoadMap
+1. manage calender (loading 90%..)
+2. Meeting Schedules (loading 90%..)
+3. Read emails / messages in socials (loading 80%..)
+4. Order food through collaboration with resturants
+5. Additional specialized agents 
+... and more!
 
 ## Project Structure
 ```
@@ -72,24 +74,25 @@ remo-ai-assistant/
 └── package.json
 ```
 
-## Tech Stack
+## Tech USed
 
-- React 18
 - TypeScript
+- React 18
 - Vite
 - AWS Services:
   - Bedrock (Claude 3 Sonnet)
   - DynamoDB
-- Privy Authentication
+  - Bedrock Multi Agent Orchestration
+  - Knowlegde Base (RAG)
+- Privy (Authentication + Wallets)
 - Viem (Ethereum interactions)
-- Telegram Bot API
-- WebSocket for real-time updates
+- Telegram Bot
 
 ## Getting Started
 
 1. Clone the repository:
 ```bash
-git clone [your-repo-url]
+git clone https://github.com/susmithagurram/remo
 ```
 
 2. Install dependencies:
@@ -101,26 +104,6 @@ npm install
 ```env
 # Copy contents from .env.example and fill in your values
 ```
-
-4. Set up required services:
-   - Create a Privy account and get your app ID
-   - Set up AWS credentials with Bedrock and DynamoDB access
-   - Create a Telegram bot using BotFather and get the token
-   - Generate a 32-byte encryption key
-
-5. Start the development server:
-```bash
-npm run dev
-```
-
-## Development Commands
-
-- `npm run dev`: Start development server
-- `npm run build`: Build for production
-- `npm run preview`: Preview production build
-
-## Environment Variables
-
 | Variable | Description | Required |
 |----------|-------------|----------|
 | VITE_PRIVY_APP_ID | Privy authentication app ID | Yes |
@@ -133,23 +116,23 @@ npm run dev
 | VITE_BOOK_AGENT_ID | Book agent identifier | Yes |
 | VITE_TRAVEL_AGENT_ID | Travel agent identifier | Yes |
 
-## Architecture
+4. Set up required services:
+   - Create a Privy account and get your app ID
+   - Set up AWS credentials with Bedrock and DynamoDB access
+   - Create a Telegram bot using BotFather and get the token
+   - Generate a 32-byte encryption key to encrypt wallet private keys
+   - Create Juliet, Books, Travel agents using in AWS Bedrock >> Builder Tools >> Agents (Refer CreateBedrockAgents.md guide for more details)
 
-The application uses a multi-layered architecture:
-1. React frontend for user interface
-2. AWS Bedrock for AI processing
-3. DynamoDB for data persistence
-4. Privy for authentication
-5. Telegram integration for remote access
-6. WebSocket for real-time updates
+5. Start the development server:
+```bash
+npm run dev
+```
 
-### Data Flow
-1. User input → Frontend
-2. Frontend → Bedrock Service
-3. Bedrock Service → Specialized Agents
-4. Agents → DynamoDB (if needed)
-5. Response → Frontend
-6. Optional: Response → Telegram
+## Development Commands
+
+- `npm run dev`: Start development server
+- `npm run build`: Build for production
+- `npm run preview`: Preview production build
 
 ## Security
 
@@ -157,7 +140,6 @@ The application uses a multi-layered architecture:
 - Environment variables for secure configuration
 - Privy authentication for user management
 - AWS IAM roles for service access
-- Secure WebSocket connections
 
 ## Contributing
 
@@ -167,20 +149,6 @@ The application uses a multi-layered architecture:
 4. Push to the branch
 5. Create a Pull Request
 
-## License
-
-[Your License] - See LICENSE file for details
-
 ## Support
 
-For support, please [create an issue](your-repo-url/issues) or contact the maintainers.
-
-## Future Enhancements
-
-- Enhanced knowledge base integration
-- Advanced document analysis
-- Calendar management
-- Email composition assistance
-- Meeting scheduling
-- Project management tools
-- Additional specialized agents 
+For support, please [create an issue](https://github.com/susmithagurram/remo/issues) or contact the maintainers.
